@@ -1,8 +1,9 @@
 // Declaration
 grammar Arithmetic;
 // Root Handling
-r: EXPR;
-EXPR: VAR '=' NUMBER;
-VAR: [a-z];
-NUMBER: [0-9];
+main: assignment;
+assignment: (ID '=' VALUE);
+
+ID: [a-zA-Z]+;
+VALUE: [0-9]+;
 WS: [ \t\r\n] -> skip;

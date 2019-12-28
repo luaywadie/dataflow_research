@@ -15,13 +15,25 @@ public class ArithmeticBaseListener implements ArithmeticListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterR(ArithmeticParser.RContext ctx) { }
+	@Override public void enterMain(ArithmeticParser.MainContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitR(ArithmeticParser.RContext ctx) { }
+	@Override public void exitMain(ArithmeticParser.MainContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAssignment(ArithmeticParser.AssignmentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAssignment(ArithmeticParser.AssignmentContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

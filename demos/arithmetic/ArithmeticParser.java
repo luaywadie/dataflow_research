@@ -16,24 +16,25 @@ public class ArithmeticParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		EXPR=1, VAR=2, NUMBER=3, WS=4;
+		T__0=1, ID=2, VALUE=3, WS=4;
 	public static final int
-		RULE_r = 0;
+		RULE_main = 0, RULE_assignment = 1;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"r"
+			"main", "assignment"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
+			null, "'='"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "EXPR", "VAR", "NUMBER", "WS"
+			null, null, "ID", "VALUE", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -87,30 +88,76 @@ public class ArithmeticParser extends Parser {
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
-	public static class RContext extends ParserRuleContext {
-		public TerminalNode EXPR() { return getToken(ArithmeticParser.EXPR, 0); }
-		public RContext(ParserRuleContext parent, int invokingState) {
+	public static class MainContext extends ParserRuleContext {
+		public AssignmentContext assignment() {
+			return getRuleContext(AssignmentContext.class,0);
+		}
+		public MainContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_r; }
+		@Override public int getRuleIndex() { return RULE_main; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ArithmeticListener ) ((ArithmeticListener)listener).enterR(this);
+			if ( listener instanceof ArithmeticListener ) ((ArithmeticListener)listener).enterMain(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ArithmeticListener ) ((ArithmeticListener)listener).exitR(this);
+			if ( listener instanceof ArithmeticListener ) ((ArithmeticListener)listener).exitMain(this);
 		}
 	}
 
-	public final RContext r() throws RecognitionException {
-		RContext _localctx = new RContext(_ctx, getState());
-		enterRule(_localctx, 0, RULE_r);
+	public final MainContext main() throws RecognitionException {
+		MainContext _localctx = new MainContext(_ctx, getState());
+		enterRule(_localctx, 0, RULE_main);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(2);
-			match(EXPR);
+			setState(4);
+			assignment();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class AssignmentContext extends ParserRuleContext {
+		public TerminalNode ID() { return getToken(ArithmeticParser.ID, 0); }
+		public TerminalNode VALUE() { return getToken(ArithmeticParser.VALUE, 0); }
+		public AssignmentContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_assignment; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ArithmeticListener ) ((ArithmeticListener)listener).enterAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ArithmeticListener ) ((ArithmeticListener)listener).exitAssignment(this);
+		}
+	}
+
+	public final AssignmentContext assignment() throws RecognitionException {
+		AssignmentContext _localctx = new AssignmentContext(_ctx, getState());
+		enterRule(_localctx, 2, RULE_assignment);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			{
+			setState(6);
+			match(ID);
+			setState(7);
+			match(T__0);
+			setState(8);
+			match(VALUE);
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -125,8 +172,10 @@ public class ArithmeticParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\6\7\4\2\t\2\3\2\3"+
-		"\2\3\2\2\2\3\2\2\2\2\5\2\4\3\2\2\2\4\5\7\3\2\2\5\3\3\2\2\2\2";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\6\r\4\2\t\2\4\3\t"+
+		"\3\3\2\3\2\3\3\3\3\3\3\3\3\3\3\2\2\4\2\4\2\2\2\n\2\6\3\2\2\2\4\b\3\2\2"+
+		"\2\6\7\5\4\3\2\7\3\3\2\2\2\b\t\7\4\2\2\t\n\7\3\2\2\n\13\7\5\2\2\13\5\3"+
+		"\2\2\2\2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

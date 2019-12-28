@@ -7,13 +7,23 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface ArithmeticListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link ArithmeticParser#r}.
+	 * Enter a parse tree produced by {@link ArithmeticParser#main}.
 	 * @param ctx the parse tree
 	 */
-	void enterR(ArithmeticParser.RContext ctx);
+	void enterMain(ArithmeticParser.MainContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ArithmeticParser#r}.
+	 * Exit a parse tree produced by {@link ArithmeticParser#main}.
 	 * @param ctx the parse tree
 	 */
-	void exitR(ArithmeticParser.RContext ctx);
+	void exitMain(ArithmeticParser.MainContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ArithmeticParser#assignment}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignment(ArithmeticParser.AssignmentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ArithmeticParser#assignment}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignment(ArithmeticParser.AssignmentContext ctx);
 }
