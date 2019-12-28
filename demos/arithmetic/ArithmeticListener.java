@@ -17,6 +17,16 @@ public interface ArithmeticListener extends ParseTreeListener {
 	 */
 	void exitMain(ArithmeticParser.MainContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ArithmeticParser#evaluation}.
+	 * @param ctx the parse tree
+	 */
+	void enterEvaluation(ArithmeticParser.EvaluationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ArithmeticParser#evaluation}.
+	 * @param ctx the parse tree
+	 */
+	void exitEvaluation(ArithmeticParser.EvaluationContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ArithmeticParser#assignment}.
 	 * @param ctx the parse tree
 	 */
@@ -26,4 +36,14 @@ public interface ArithmeticListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAssignment(ArithmeticParser.AssignmentContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ArithmeticParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpression(ArithmeticParser.ExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ArithmeticParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpression(ArithmeticParser.ExpressionContext ctx);
 }
