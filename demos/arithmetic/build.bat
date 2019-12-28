@@ -3,7 +3,7 @@
 :: Compile Java
 :: %1 => First Argument
 
-del /f *.java, *.class
+del /f %1*.java, *.class
 
 call antlr4 %1.g4
 call javac %1*.java
