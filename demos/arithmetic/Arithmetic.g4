@@ -2,12 +2,12 @@
 grammar Arithmetic;
 
 // Root Handling
-main: evaluation+;
+main: evaluation*;
 evaluation: assignment | expression;
-assignment: (ID '=' VALUE);
-expression: (VALUE OPEARTOR VALUE);
+assignment: ID '=' (NUMBER | expression);
+expression: (ID | NUMBER) OPEARTOR (ID | NUMBER | expression);
 
 ID: [a-zA-Z]+;
-VALUE: [0-9]+;
+NUMBER: '-'? [0-9]+;
 OPEARTOR: '+' | '-' | '*' | '/';
 WS: [ \t\r\n] -> skip;
