@@ -3,6 +3,10 @@ grammar Arithmetic;
 
 @members {
   int total = 0;
+
+  public void showValue(int n) {
+    System.out.println(n);
+  }
 }
 
 // Root Handling
@@ -12,9 +16,11 @@ assignment: ID '=' (NUMBER | expression);
 expression:
   (ID | a=NUMBER) OPEARTOR (ID | b=NUMBER | expression)
   {
+    showValue($a.int);
+    showValue($b.int);
     total += $a.int;
     total += $b.int;
-    System.out.println(total);
+    /* System.out.println(total); */
   }
 ;
 

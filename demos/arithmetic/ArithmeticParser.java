@@ -86,6 +86,10 @@ public class ArithmeticParser extends Parser {
 
 	  int total = 0;
 
+	  public void showValue(int n) {
+	    System.out.println(n);
+	  }
+
 	public ArithmeticParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
@@ -338,9 +342,11 @@ public class ArithmeticParser extends Parser {
 				break;
 			}
 
+			    showValue((((ExpressionContext)_localctx).a!=null?Integer.valueOf(((ExpressionContext)_localctx).a.getText()):0));
+			    showValue((((ExpressionContext)_localctx).b!=null?Integer.valueOf(((ExpressionContext)_localctx).b.getText()):0));
 			    total += (((ExpressionContext)_localctx).a!=null?Integer.valueOf(((ExpressionContext)_localctx).a.getText()):0);
 			    total += (((ExpressionContext)_localctx).b!=null?Integer.valueOf(((ExpressionContext)_localctx).b.getText()):0);
-			    System.out.println(total);
+			    /* System.out.println(total); */
 			  
 			}
 		}

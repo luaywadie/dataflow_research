@@ -80,6 +80,10 @@ public class ArithmeticLexer extends Lexer {
 
 	  int total = 0;
 
+	  public void showValue(int n) {
+	    System.out.println(n);
+	  }
+
 
 	public ArithmeticLexer(CharStream input) {
 		super(input);
