@@ -78,6 +78,9 @@ public class ArithmeticLexer extends Lexer {
 	}
 
 
+	  int total = 0;
+
+
 	public ArithmeticLexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);

@@ -7,4 +7,4 @@ del /f %1*.java, *.class
 
 call antlr4 %1.g4
 call javac %1*.java
-grun %1 %2 -gui
+grun %1 %2 -tree

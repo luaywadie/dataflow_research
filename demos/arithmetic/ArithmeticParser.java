@@ -83,6 +83,9 @@ public class ArithmeticParser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
+
+	  int total = 0;
+
 	public ArithmeticParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
@@ -334,7 +337,11 @@ public class ArithmeticParser extends Parser {
 				}
 				break;
 			}
-			System.out.println((((ExpressionContext)_localctx).b!=null?((ExpressionContext)_localctx).b.getText():null));
+
+			    total += (((ExpressionContext)_localctx).a!=null?Integer.valueOf(((ExpressionContext)_localctx).a.getText()):0);
+			    total += (((ExpressionContext)_localctx).b!=null?Integer.valueOf(((ExpressionContext)_localctx).b.getText()):0);
+			    System.out.println(total);
+			  
 			}
 		}
 		catch (RecognitionException re) {
