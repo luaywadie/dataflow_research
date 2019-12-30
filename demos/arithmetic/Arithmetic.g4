@@ -5,7 +5,7 @@ grammar Arithmetic;
 main: evaluation*;
 evaluation: assignment | expression;
 assignment: ID '=' (NUMBER | expression);
-expression: (ID | NUMBER) OPEARTOR (ID | NUMBER | expression);
+expression: (ID | a=NUMBER) OPEARTOR (ID | b=NUMBER | expression) {System.out.println($b.text);};
 
 ID: [a-zA-Z]+;
 NUMBER: '-'? [0-9]+;
