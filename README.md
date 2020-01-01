@@ -5,7 +5,7 @@ This project will establish the guidelines and understanding of a scientific wor
 - Core [Definitions](https://github.com/luaywadie/dataflow_research/blob/master/Definitions.md) and Theorems
 - [Initial Setup](https://github.com/luaywadie/dataflow_research/tree/master/demos/initial_phase) ✔
   - Constructed the basic demo files and fully configured (Linux | Windows 10) environments for future operations.
-- [Arithmetic (Basic)]https://github.com/luaywadie/dataflow_research/tree/master/demos/arithmetic ⟲
+- [Arithmetic (Basic)](https://github.com/luaywadie/dataflow_research/tree/master/demos/arithmetic) ⟲
   - Creating a simple input recognizer for digits and variables, as well as PEMDAS support.
 
 <ins>Related Softwares / Libraries:</ins>
