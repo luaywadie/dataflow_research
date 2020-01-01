@@ -9,7 +9,7 @@ This project will establish the guidelines and understanding of a scientific wor
   - Creating a simple input recognizer for digits and variables, as well as PEMDAS support.
   - https://github.com/luaywadie/dataflow_research/tree/master/demos/arithmetic
 
-<ins>Related Software's / Libraries:</ins>
+<ins>Related Softwares / Libraries:</ins>
 - Dataview (Repository)
   - https://github.com/shiyonglu/DATAVIEW
 - ANTLR V4 (Repository)
