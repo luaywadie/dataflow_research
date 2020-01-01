@@ -7,6 +7,7 @@ This project will establish the guidelines and understanding of a scientific wor
   - https://github.com/luaywadie/dataflow_research/tree/master/demos/initial_phase
 - Arithmetic (Basic) ⟲
   - Creating a simple input recognizer for digits and variables, as well as PEMDAS support.
+  - https://github.com/luaywadie/dataflow_research/tree/master/demos/arithmetic
 
 <ins>Related Software's / Libraries:</ins>
 - Dataview (Repository)
