@@ -4,6 +4,7 @@ This project will establish the guidelines and understanding of a scientific wor
 <ins>Research Progress</ins>
 - Initial Setup ✔
   - Constructed the basic demo files and fully configured (Linux | Windows 10) environments for future operations.
+  - https://github.com/luaywadie/dataflow_research/tree/master/demos/initial_phase
 - Arithmetic (Basic) ⟲
   - Creating a simple input recognizer for digits and variables, as well as PEMDAS support.
 
