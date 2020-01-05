@@ -3,8 +3,8 @@ This project will establish the guidelines and understanding of a scientific wor
 
 <ins>Research Progress</ins>
 - Core Definitions and Theorems
-  - [Objective Definitions](https://github.com/luaywadie/dataflow_research/blob/master/Definitions.md) ⟲
-  - [ANTLR V4 Definitions]
+  - [Objective Definitions](https://github.com/luaywadie/dataflow_research/blob/master/lexicon/Definitions.md) ⟲
+  - [ANTLR V4 Definitions](https://github.com/luaywadie/dataflow_research/blob/master/lexicon/Antlr4_Definitions)
 - [Initial Setup](https://github.com/luaywadie/dataflow_research/tree/master/demos/initial_phase) ✔
   - Constructed the basic demo files and fully configured (Linux | Windows 10) environments for future operations.
 - [Arithmetic (Basic)](https://github.com/luaywadie/dataflow_research/tree/master/demos/arithmetic) ⟲
