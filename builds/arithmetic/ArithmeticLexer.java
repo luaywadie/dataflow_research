@@ -82,13 +82,26 @@ public class ArithmeticLexer extends Lexer {
 
 	  // Core Function
 	  public int getOP(String op,int a, int b) {
-	      if (op.equals("+")) { return add(a,b); }
+	      /* if (op.equals("+")) { return add(a,b); }
+	      if (op.equals("-")) { return sub(a,b); }
+	      if (op.equals("*")) { return mul(a,b); }
+	      if (op.equals("/")) { return div(a,b); } */
+
+	      switch (op) {
+	        case "+": return add(a,b);
+	        case "-": return sub(a,b);
+	        case "*": return mul(a,b);
+	        case "/": return div(a,b);
+	      }
 
 	      return 0;
 	  }
 
 	  // Addition Function
 	  public int add(int a, int b) { return a + b; };
+	  public int sub(int a, int b) { return a - b; };
+	  public int mul(int a, int b) { return a * b; };
+	  public int div(int a, int b) { return a / b; };
 
 
 	public ArithmeticLexer(CharStream input) {
