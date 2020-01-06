@@ -80,9 +80,15 @@ public class ArithmeticLexer extends Lexer {
 
 	  int total = 0;
 
-	  public void showValue(int n) {
-	    System.out.println(n);
+	  // Core Function
+	  public int getOP(String op,int a, int b) {
+	      if (op.equals("+")) { return add(a,b); }
+
+	      return 0;
 	  }
+
+	  // Addition Function
+	  public int add(int a, int b) { return a + b; };
 
 
 	public ArithmeticLexer(CharStream input) {

@@ -86,9 +86,15 @@ public class ArithmeticParser extends Parser {
 
 	  int total = 0;
 
-	  public void showValue(int n) {
-	    System.out.println(n);
+	  // Core Function
+	  public int getOP(String op,int a, int b) {
+	      if (op.equals("+")) { return add(a,b); }
+
+	      return 0;
 	  }
+
+	  // Addition Function
+	  public int add(int a, int b) { return a + b; };
 
 	public ArithmeticParser(TokenStream input) {
 		super(input);
@@ -266,6 +272,7 @@ public class ArithmeticParser extends Parser {
 
 	public static class ExpressionContext extends ParserRuleContext {
 		public Token a;
+		public Token op;
 		public Token b;
 		public TerminalNode OPEARTOR() { return getToken(ArithmeticParser.OPEARTOR, 0); }
 		public List<TerminalNode> ID() { return getTokens(ArithmeticParser.ID); }
@@ -318,7 +325,7 @@ public class ArithmeticParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			setState(28);
-			match(OPEARTOR);
+			((ExpressionContext)_localctx).op = match(OPEARTOR);
 			setState(32);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
@@ -342,11 +349,8 @@ public class ArithmeticParser extends Parser {
 				break;
 			}
 
-			    showValue((((ExpressionContext)_localctx).a!=null?Integer.valueOf(((ExpressionContext)_localctx).a.getText()):0));
-			    showValue((((ExpressionContext)_localctx).b!=null?Integer.valueOf(((ExpressionContext)_localctx).b.getText()):0));
-			    total += (((ExpressionContext)_localctx).a!=null?Integer.valueOf(((ExpressionContext)_localctx).a.getText()):0);
-			    total += (((ExpressionContext)_localctx).b!=null?Integer.valueOf(((ExpressionContext)_localctx).b.getText()):0);
-			    /* System.out.println(total); */
+			    int result = getOP((((ExpressionContext)_localctx).op!=null?((ExpressionContext)_localctx).op.getText():null), (((ExpressionContext)_localctx).a!=null?Integer.valueOf(((ExpressionContext)_localctx).a.getText()):0), (((ExpressionContext)_localctx).b!=null?Integer.valueOf(((ExpressionContext)_localctx).b.getText()):0));
+			    System.out.println(result);
 			  
 			}
 		}

@@ -4,9 +4,15 @@ grammar Arithmetic;
 @members {
   int total = 0;
 
-  public void showValue(int n) {
-    System.out.println(n);
+  // Core Function
+  public int getOP(String op,int a, int b) {
+      if (op.equals("+")) { return add(a,b); }
+
+      return 0;
   }
+
+  // Addition Function
+  public int add(int a, int b) { return a + b; };
 }
 
 // Root Handling
@@ -14,13 +20,10 @@ main: evaluation*;
 evaluation: assignment | expression;
 assignment: ID '=' (NUMBER | expression);
 expression:
-  (ID | a=NUMBER) OPEARTOR (ID | b=NUMBER | expression)
+  (ID | a=NUMBER) op=OPEARTOR (ID | b=NUMBER | expression)
   {
-    showValue($a.int);
-    showValue($b.int);
-    total += $a.int;
-    total += $b.int;
-    /* System.out.println(total); */
+    int result = getOP($op.text, $a.int, $b.int);
+    System.out.println(result);
   }
 ;
 
