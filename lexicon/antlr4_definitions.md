@@ -8,9 +8,9 @@
          import Pandas as pd
        }
      ```
-  - <b>@member</b>: Declares inline scripting when compiling from a lexer.
+  - <b>@members</b>: Declares inline scripting when compiling from a lexer.
      ```
-       @member {
+       @members {
          int count = 0;
          count += 1;
          System.out.println(count);
@@ -18,7 +18,7 @@
      ```
     - We can use declared tokens inside from rules directly.
      ```
-       @member {
+       @members {
         public boolean isPositive(int a) { if (a >= 0) ? return true : return false;}; 
        }
        
