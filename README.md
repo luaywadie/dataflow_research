@@ -7,12 +7,19 @@ This project will establish the guidelines and understanding of a scientific wor
   - [ANTLR4 Definitions](https://github.com/luaywadie/dataflow_research/blob/master/lexicon/antlr4_definitions.md) ⟲
 - [Initial Setup](https://github.com/luaywadie/dataflow_research/tree/master/builds/initial_phase) ✔
   - Constructed the basic demo files and fully configured (Linux | Windows 10) environments for future operations.
-- [Arithmetic (Basic)](https://github.com/luaywadie/dataflow_research/tree/master/builds/arithmetic) ⟲
-  - Creating a simple input recognizer for digits and variables, as well as PEMDAS support.
-  - Inline support for functions and methods (Semantic)
+- [Arithmetic (Basic)](https://github.com/luaywadie/dataflow_research/tree/master/builds/arithmetic) ✔
+  - Creating a simple input recognizer for digits and variables ✔
+  - Inline support for functions and methods (Semantic) ✔
+  - Semantic PEMDAS Support ❗
+- [Prase Tree Listener](https://github.com/luaywadie/dataflow_research/tree/master/builds/parse_tree_listener) ⟲
+  - Create a walker that traverses over the identified nodes ⟲
 
 <ins>Related Softwares / Libraries:</ins>
 - Dataview (Repository)
   - https://github.com/shiyonglu/DATAVIEW
 - ANTLR V4 (Repository)
   - https://github.com/antlr/antlr4
+  
+<ins>Research Resources</ins>
+- Dataflow-Based Scientific Workflow Composition Framework (Paper)
+  - https://drive.google.com/open?id=1Tim7JAbIefel7STc41MDYowD34OZiIhk
