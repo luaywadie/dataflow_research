@@ -6,10 +6,6 @@ grammar Arithmetic;
 
   // Core Function
   public int getOP(String op,int a, int b) {
-      /* if (op.equals("+")) { return add(a,b); }
-      if (op.equals("-")) { return sub(a,b); }
-      if (op.equals("*")) { return mul(a,b); }
-      if (op.equals("/")) { return div(a,b); } */
 
       switch (op) {
         case "+": return add(a,b);
