@@ -19,3 +19,7 @@ This project will establish the guidelines and understanding of a scientific wor
   - https://github.com/shiyonglu/DATAVIEW
 - ANTLR V4 (Repository)
   - https://github.com/antlr/antlr4
+  
+<ins>Research Paper</ins>
+- Dataflow-Based Scientific Workflow Composition Framework
+  - https://drive.google.com/open?id=1Tim7JAbIefel7STc41MDYowD34OZiIhk
