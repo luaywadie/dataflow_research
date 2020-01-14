@@ -11,6 +11,8 @@ This project will establish the guidelines and understanding of a scientific wor
   - Creating a simple input recognizer for digits and variables ✔
   - Inline support for functions and methods (Semantic) ✔
   - Semantic PEMDAS Support ❗
+- [Prase Tree Listener](https://github.com/luaywadie/dataflow_research/tree/master/builds/parse_tree_listener) ⟲
+  - Create a walker that traverses over the identified nodes ⟲
 
 <ins>Related Softwares / Libraries:</ins>
 - Dataview (Repository)
