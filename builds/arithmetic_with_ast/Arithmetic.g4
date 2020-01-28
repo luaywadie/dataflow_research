@@ -10,6 +10,7 @@ OPERATOR : PLUS | MINUS | MULT | DIV | MOD | EXP ;
 // fragments are rules that can only be used within the lexer; they are invisible to the parser
 fragment PLUS : 'plus' | '+';
 fragment MINUS : 'minus' | '-';
+
 fragment MULT : 'times' | '*';
 fragment DIV : 'divby' | '/';
 fragment MOD : 'mod' | '%';

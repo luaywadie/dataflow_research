@@ -1,0 +1,16 @@
+aspect accept {
+    Object RootNode.accept(AstVisitor v) {
+        return v.visit(this);
+    }
+    Object StatementNode.accept(AstVisitor v) {
+        return v.visit(this);
+    }
+
+    Object AssignmentNode.accept(AstVisitor v) {
+        return v.visit(this);
+    }
+
+    Object ArithmeticExpressionNode.accept(AstVisitor v) {
+        return v.visit(this);
+    }
+}
