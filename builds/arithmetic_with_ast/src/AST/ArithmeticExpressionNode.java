@@ -1,7 +1,7 @@
 /* This file was generated with JastAdd2 (http://jastadd.org) version 2.3.3 */
 /**
  * @ast node
- * @declaredat Arithmetic.ast:4
+ * @declaredat Arithmetic.ast:46
  * @astdecl ArithmeticExpressionNode : StatementNode ::= lOp:Operand <OPERATOR:String> rOp:Operand;
  * @production ArithmeticExpressionNode : {@link StatementNode} ::= <span class="component">lOp:{@link Operand}</span> <span class="component">&lt;OPERATOR:{@link String}&gt;</span> <span class="component">rOp:{@link Operand}</span>;
 

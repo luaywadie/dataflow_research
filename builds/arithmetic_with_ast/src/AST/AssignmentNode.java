@@ -1,7 +1,7 @@
 /* This file was generated with JastAdd2 (http://jastadd.org) version 2.3.3 */
 /**
  * @ast node
- * @declaredat Arithmetic.ast:3
+ * @declaredat Arithmetic.ast:44
  * @astdecl AssignmentNode : StatementNode ::= <ID:String> ArithmeticExpressionNode;
  * @production AssignmentNode : {@link StatementNode} ::= <span class="component">&lt;ID:{@link String}&gt;</span> <span class="component">{@link ArithmeticExpressionNode}</span>;
 

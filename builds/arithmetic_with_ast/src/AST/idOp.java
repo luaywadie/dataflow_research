@@ -1,7 +1,7 @@
 /* This file was generated with JastAdd2 (http://jastadd.org) version 2.3.3 */
 /**
  * @ast node
- * @declaredat Arithmetic.ast:7
+ * @declaredat Arithmetic.ast:50
  * @astdecl idOp : Operand ::= <ID:String>;
  * @production idOp : {@link Operand} ::= <span class="component">&lt;ID:{@link String}&gt;</span>;
 

@@ -64,13 +64,13 @@ public class AstBuilderVisitor extends ArithmeticBaseVisitor<ASTNode> {
         if (Character.isLetter(rOpToken.charAt(0))) {
             rOp = new idOp(lOpToken);
         } else if (Character.isDigit(rOpToken.charAt(0))) {
-            rOp = new intOp(lOpToken);
+            rOp = new intOp(Integer.parseInt(lOpToken));
         } else throw new RuntimeException("rOp is not a valid operand - " + rOp);
 
         if (Character.isLetter(lOpToken.charAt(0))) {
             lOp = new idOp(lOpToken);
         } else if (Character.isDigit(lOpToken.charAt(0))) {
-            lOp = new intOp(lOpToken);
+            lOp = new intOp(Integer.parseInt(lOpToken));
         } else throw new RuntimeException("lOp is not a valid operand - " + lOp);
 
 //        return new ArithmeticExpressionNode(operator, lOpType, rOpType, lOp, rOp);

@@ -1,4 +1,6 @@
 /**
+http://jastadd.org/web/documentation/reference-manual.php#AbstractSyntax
+
 What does a .ast file do?
     A .ast file allows us to specify the types of nodes from which we can construct an AST. Notice that
     here, we do not have any tokens that do not convey meaning. For example, in the AST,
@@ -9,6 +11,7 @@ What does a .ast file do?
 What happens when I run JastAdd tool on this file?
     A class is generated for each rule. In addition to a class for each rule, there are also a few other
     helper classes, and parent classes. You can see them in the parent directory (AST) to this one.
+    The tool also generates very useful comments for these classes, so definitely go read through those.
 
 Why do we have abstract node types/when is it useful?
     When we have a grammar rule or subrule that contains a choice. Notice that the JastAdd syntax does not
@@ -25,8 +28,10 @@ the grammar, and without Node if they don't. Also, if the RHS is just a token, I
 a lowercase letter. I think that this is something we should establish as a convention for the project, but I
 welcome your feedback on this.
 
-What does <SOMETHING> mean?
+What does <SOMETHING> or <SOMETHING:TYPE> mean?
     It represents a nonterminal (token) that will be represented as a member of the LHS's class.
+    <SOMETHING> is the same as <SOMETHING:String>. If the token is not a string, then you must specify the type,
+    for example <INT:int> means that the token <INT> is of type int.
 
 What does the syntax lOp:Operand mean?
     It means that we are naming one of the children of the node lOp, and we are saying that it must be an
@@ -41,5 +46,5 @@ AssignmentNode: StatementNode ::= <ID> ArithmeticExpressionNode; // One child is
 ArithmeticExpressionNode: StatementNode ::= lOp:Operand <OPERATOR> rOp:Operand;  // naming of the two Operand
                                                                                  // children is required
 abstract Operand; // just a parent class terminal nodes
-intOp: Operand ::= <INT>;
+intOp: Operand ::= <INT:int>; // is a string because
 idOp: Operand ::= <ID>;
