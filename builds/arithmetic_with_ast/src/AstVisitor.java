@@ -1,5 +1,3 @@
-package arithmetic.example;
-
 interface AstVisitor<T> {
     T visit(RootNode node);
 //    public abstract T visit(StatementNode node);

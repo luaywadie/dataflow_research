@@ -1,5 +1,3 @@
-package arithmetic.example;
-
 import java.util.HashMap;
 
 public class AstEvaluationVisitor implements AstVisitor<Integer> {

@@ -1,5 +1,3 @@
-package arithmetic.example;
-
 /** Wrapper class for storing nullable attribute values. 
  * @ast class
  * @declaredat ASTState:2

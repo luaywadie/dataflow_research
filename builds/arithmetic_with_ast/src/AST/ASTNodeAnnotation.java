@@ -1,5 +1,3 @@
-package arithmetic.example;
-
 /**
  * @ast class
  * @declaredat ASTNode:214

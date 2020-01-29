@@ -1,5 +1,3 @@
-package arithmetic.example;
-
 /** @apilevel internal 
  * @ast class
  * @declaredat ASTState:34

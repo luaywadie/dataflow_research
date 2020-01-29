@@ -1,5 +1,4 @@
 // Generated from Arithmetic.g4 by ANTLR 4.7.2
-package arithmetic;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
