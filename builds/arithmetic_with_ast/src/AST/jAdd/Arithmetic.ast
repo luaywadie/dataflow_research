@@ -1,7 +1,45 @@
-RootNode ::= StatementNode*;
-abstract StatementNode;
-AssignmentNode: StatementNode ::= <ID> ArithmeticExpressionNode;
-ArithmeticExpressionNode: StatementNode ::= lOp:Operand <OPERATOR> rOp:Operand;
-abstract Operand;
+/**
+What does a .ast file do?
+    A .ast file allows us to specify the types of nodes from which we can construct an AST. Notice that
+    here, we do not have any tokens that do not convey meaning. For example, in the AST,
+    AssignmentNode only holds the ID we are assigning, and what is being assigned to it. There is no
+    unnecessary token, such as "=". We do not need the "=" token because by (our own) definition, we know
+    the semantics of an AssignmentNode.
+
+What happens when I run JastAdd tool on this file?
+    A class is generated for each rule. In addition to a class for each rule, there are also a few other
+    helper classes, and parent classes. You can see them in the parent directory (AST) to this one.
+
+Why do we have abstract node types/when is it useful?
+    When we have a grammar rule or subrule that contains a choice. Notice that the JastAdd syntax does not
+    have any mechanism for choice. Therefore, by creating this abstract parent class, we can effectively
+    express the choice of different types of statements.
+    For example, if you notice the grammar rule statement, it is only a choice between two other rules,
+    thus StatementNode is abstract.
+    Similarly, arithmeticExpression contains two choice points (for the left and right operands), so we
+    define an abstract Operand node to represent this choice.
+    This inheritance is expressed in the form child: parent ::= ...
+
+A note on the naming: I named the left hand sides (LHS) to end with Node if they correspond to a rule in
+the grammar, and without Node if they don't. Also, if the RHS is just a token, I named the LHS starting with
+a lowercase letter. I think that this is something we should establish as a convention for the project, but I
+welcome your feedback on this.
+
+What does <SOMETHING> mean?
+    It represents a nonterminal (token) that will be represented as a member of the LHS's class.
+
+What does the syntax lOp:Operand mean?
+    It means that we are naming one of the children of the node lOp, and we are saying that it must be an
+    Operator node. When there is only one type of a given child node, naming is optional, but it is required
+    when there are two more children of the same type (to avoid ambiguity and naming conflicts),
+*/
+
+RootNode ::= StatementNode*; // * means that we have a List node as a child of RootNode
+abstract StatementNode; // simply represents a choice point
+AssignmentNode: StatementNode ::= <ID> ArithmeticExpressionNode; // One child is a terminal node (<ID>),
+                                                                 // the other is another internal node
+ArithmeticExpressionNode: StatementNode ::= lOp:Operand <OPERATOR> rOp:Operand;  // naming of the two Operand
+                                                                                 // children is required
+abstract Operand; // just a parent class terminal nodes
 intOp: Operand ::= <INT>;
 idOp: Operand ::= <ID>;
