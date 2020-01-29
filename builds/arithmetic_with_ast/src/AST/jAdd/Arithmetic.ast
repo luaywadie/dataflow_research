@@ -1,0 +1,7 @@
+RootNode ::= StatementNode*;
+abstract StatementNode;
+AssignmentNode: StatementNode ::= <ID> ArithmeticExpressionNode;
+ArithmeticExpressionNode: StatementNode ::= lOp:Operand <OPERATOR> rOp:Operand;
+abstract Operand;
+intOp: Operand ::= <INT>;
+idOp: Operand ::= <ID>;
