@@ -4,7 +4,8 @@ grammar Arithmetic;
 LEXER
 TOKENS - name must begin with uppercase letter; by convention ALL letters are uppercase
 */
-WHITESPACE : (' ' | '\t' | '\n' | '\r') -> skip; // must wrap in () to use -> skip command
+WHITESPACE : (' ' | '\t' | '\n' | '\r') -> skip ; // must wrap in () to use -> skip command
+COMMENT : ('//' .*? '\n')  -> skip ; // .*? means match any token that isn't the next one
 EQ : 'equals' | '=' | '->';
 OPERATOR : PLUS | MINUS | MULT | DIV | MOD | EXP ;
 // fragments are rules that can only be used within the lexer; they are invisible to the parser

@@ -1,9 +1,9 @@
 /* This file was generated with JastAdd2 (http://jastadd.org) version 2.3.3 */
 /**
  * @ast node
- * @declaredat Arithmetic.ast:6
- * @astdecl intOp : Operand ::= <INT:String>;
- * @production intOp : {@link Operand} ::= <span class="component">&lt;INT:{@link String}&gt;</span>;
+ * @declaredat Arithmetic.ast:49
+ * @astdecl intOp : Operand ::= <INT:int>;
+ * @production intOp : {@link Operand} ::= <span class="component">&lt;INT:{@link int}&gt;</span>;
 
  */
 public class intOp extends Operand implements Cloneable {
@@ -27,10 +27,10 @@ public class intOp extends Operand implements Cloneable {
    */
   @ASTNodeAnnotation.Constructor(
     name = {"INT"},
-    type = {"String"},
+    type = {"int"},
     kind = {"Token"}
   )
-  public intOp(String p0) {
+  public intOp(int p0) {
     setINT(p0);
   }
   /** @apilevel low-level 
@@ -131,19 +131,19 @@ public class intOp extends Operand implements Cloneable {
    * @param value The new value for the lexeme INT.
    * @apilevel high-level
    */
-  public void setINT(String value) {
-    tokenString_INT = value;
+  public void setINT(int value) {
+    tokenint_INT = value;
   }
   /** @apilevel internal 
    */
-  protected String tokenString_INT;
+  protected int tokenint_INT;
   /**
    * Retrieves the value for the lexeme INT.
    * @return The value for the lexeme INT.
    * @apilevel high-level
    */
   @ASTNodeAnnotation.Token(name="INT")
-  public String getINT() {
-    return tokenString_INT != null ? tokenString_INT : "";
+  public int getINT() {
+    return tokenint_INT;
   }
 }

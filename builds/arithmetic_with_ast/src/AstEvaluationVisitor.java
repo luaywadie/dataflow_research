@@ -52,7 +52,7 @@ public class AstEvaluationVisitor implements AstVisitor<Integer> {
 
         if (node.getlOp() instanceof intOp) { // integer
             intOp lOp = (intOp)node.getlOp();
-            lOpValue = Integer.parseInt(lOp.getINT());
+            lOpValue = lOp.getINT();
             for (int i = 0; i < indentLevel; i++) System.out.print("\t");
             System.out.println("Left op is an INT: " + lOpValue);
         } else if (node.getlOp() instanceof idOp) { // ID (variable)
@@ -72,7 +72,7 @@ public class AstEvaluationVisitor implements AstVisitor<Integer> {
         // now the right operand
         if (node.getrOp() instanceof intOp) { // integer
             intOp rOp = (intOp)node.getrOp();
-            rOpValue = Integer.parseInt(rOp.getINT());
+            rOpValue = rOp.getINT();
             for (int i = 0; i < indentLevel; i++) System.out.print("\t");
             System.out.println("Left op is an INT: " + lOpValue);
         } else if (node.getrOp() instanceof idOp) { // ID (variable)

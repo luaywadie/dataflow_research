@@ -1,7 +1,7 @@
 /* This file was generated with JastAdd2 (http://jastadd.org) version 2.3.3 */
 /**
  * @ast node
- * @declaredat Arithmetic.ast:5
+ * @declaredat Arithmetic.ast:48
  * @astdecl Operand : ASTNode;
  * @production Operand : {@link ASTNode};
 
