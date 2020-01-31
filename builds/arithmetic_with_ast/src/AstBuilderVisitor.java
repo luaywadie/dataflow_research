@@ -49,7 +49,7 @@ public class AstBuilderVisitor extends ArithmeticBaseVisitor<ASTNode> {
     @SuppressWarnings("null")
     public StatementNode visitArithmeticExpression(ArithmeticParser.ArithmeticExpressionContext ctx) {
         System.out.println("Visiting ArithmeticExpression");
-
+        System.err.println(ctx);
         String operator = ctx.OPERATOR().getText();
 
         // unwrap String values from Token for each operand
@@ -57,14 +57,15 @@ public class AstBuilderVisitor extends ArithmeticBaseVisitor<ASTNode> {
          */
         String lOpToken = ctx.lOp.getText();
         String rOpToken = ctx.rOp.getText();
+        System.out.println("LEN: " + rOpToken.length());
         Operand rOp = null;
         Operand lOp = null;
         // determine types of each operand by what type of character they begin with
         // this is important when evaluating the expression
         if (Character.isLetter(rOpToken.charAt(0))) {
-            rOp = new idOp(lOpToken);
+            rOp = new idOp(rOpToken);
         } else if (Character.isDigit(rOpToken.charAt(0))) {
-            rOp = new intOp(Integer.parseInt(lOpToken));
+            rOp = new intOp(Integer.parseInt(rOpToken));
         } else throw new RuntimeException("rOp is not a valid operand - " + rOp);
 
         if (Character.isLetter(lOpToken.charAt(0))) {
