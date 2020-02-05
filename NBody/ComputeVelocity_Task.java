@@ -1,12 +1,18 @@
 import dataview.models.*;
 
+/**
+ * Input from: InitializeNBody_Task, ComputeAcceleration_Task
+ * Input to: ComputeCollisions_Task
+ * Parallel with: ComputeVelocity_Task
+ */
+
 public class ComputeVelocity_Task extends Task {
     public ComputeVelocity_Task() {
         super("Compute Velocity", "Compute the velocity of one of the bodies");
 
         ins = new InputPort[2];
-        ins[0] = new InputPort("Velocity", Port.DATAVIEW_MathVector, "The current velocity of the body (BEFORE this time step)");
-        ins[1] = new InputPort("Acceleration", Port.DATAVIEW_MathVector, "The acceleration of the body (AT this time step");
+        ins[0] = new InputPort("Velocity", Port.DATAVIEW_MathVector, "The velocity of the body (calculated at the previous time step).");
+        ins[1] = new InputPort("Acceleration", Port.DATAVIEW_MathVector, "The acceleration of the body (calculated this time step).");
 
         outs = new OutputPort[1];
         outs[0] = new OutputPort("Velocity", Port.DATAVIEW_MathVector, "The resulting velocity of the body (AT this time step");

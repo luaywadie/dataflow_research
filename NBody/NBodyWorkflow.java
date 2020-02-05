@@ -51,63 +51,83 @@ public class NBodyWorkflow extends Workflow {
         Task[] computePositions = addTasks("ComputePosition_Task", N);
 
         // 4: collisions
-        Task resolveCollisions = addTask("ComputeCollisions_Task");
+        Task computeCollisions = addTask("ComputeCollisions_Task");
 
         // 5: write results
         Task writeResults = addTask("NBodyResultWriter_Task");
 
         /* EDGES */
-        // input files to the initialization task
-        // position
-        addEdge(0, initialize, 0);
-        // velocity
-        addEdge(1, initialize, 1);
-        // mass
-        addEdge(2, initialize, 2);
 
-        // TO ComputeAcceleration_Task
-        for (int mainBody = 0; mainBody < NBodyWorkflow.N; mainBody++) {
-            addEdge(initialize, mainBody*3, computeAccelerations[mainBody], 0); // position of THIS
+        // workflow inputs
+        addEdge(0, initialize); // position input file
+        addEdge(1, initialize, 1); // velocity input file
+        addEdge(2, initialize, 2); // mass input file
 
-
-
-
-            // get the masses and positions of other bodies
-//            for (int otherBody = 0; otherBody < NBodyWorkflow.N; otherBody++) {
-//                if (mainBody != otherBody) {
-//                    addEdge(initialize, otherBody*3, computeAccelerations[mainBody], (mainBody+1)3 + 1); // position
-//                                                           // inputPort index offset by 1 because input port 0 is for the main body position
-//                    System.out.println("POSITION EDGE BETWEEN INITIALIZE PoRT # " + otherBody*3 + " AND COMPUTE PORT " + mainBody*3);
-//                    addEdge(initialize, otherBody*3 + 2, computeAccelerations[mainBody], mainBody*3 + 3); // mass
-//                        //inputPort index offset by 3 because 1 for port 0 being main body position, plus another 2 because mass is the 3rd relative port
-//                }
-//            }
+        // InitializeNBody_Task TO ComputeAcceleration_Task
+        int positionIndex = -1; // the input port in which to feed body's position
+        int massIndex = -1; // the input port in which to feed body's mass
+        for (int body = 0; body < N; body++) {
+            for (int taskInstance = 0; taskInstance < N; taskInstance++) {
+                if (body == taskInstance) { // task corresponds to body
+                    addEdge(initialize, 3 * body, computeAccelerations[taskInstance], 0); // position
+                    positionIndex = 2 * body + 1; // TODO: Describe why this is being done, and why we need it
+                    massIndex = positionIndex + 1; // TODO: Describe why this is being done, and why we need it
+                }
+                else { // task does not correspond to the body
+                    addEdge(initialize, 3 * body, // position is an offset of 0
+                            computeAccelerations[taskInstance], positionIndex);
+                    addEdge(initialize, 3 * body + 2, // mass is an offset of 2
+                            computeAccelerations[taskInstance], massIndex);
+                }
+            }
         }
 
-        // TO ComputeVelocity_Task
-        for (int i = 0; i < N; i++) {
-            addEdge(initialize, 3*i + 1, computeVelocities[i], 0); // velocity
-            addEdge(computeAccelerations[i], 0, computeVelocities[i], 1); // acceleration
+        // InitializeNBody_Task TO Compute_Position_Task
+        for (int body = 0; body < N; body++) {
+            addEdge(initialize, 3 * body, computePositions[body], 0); // position
+            addEdge(initialize, 3 * body + 1, computePositions[body], 1); // velocity
         }
 
-        // TO ComputePosition_Task
-        for (int i = 0; i < N; i++) {
-            addEdge(initialize, 3 * i, computePositions[i], 0); // position
-            addEdge(computeVelocities[i], 0, computePositions[i], 1); // velocity
-            addEdge(computeAccelerations[i], 0, computePositions[i], 2); // acceleration
+        // InitializeNBody_Task TO Compute_Velocity_Task
+        for (int body = 0; body < N; body++) {
+            addEdge(initialize, 3 * body + 1, computeVelocities[body], 0); // velocity
         }
 
-        // TO ComputeCollisions_Task
-        for (int i = 0; i < N; i++) {
-            addEdge(computePositions[i], 0, resolveCollisions, i * 2); // position
-            addEdge(computeVelocities[i], 0, resolveCollisions, i*2 + 1); // velocity
+
+        // ComputeAcceleration_Task TO ComputePosition_Task
+        for (int body = 0; body < N; body++) {
+            addEdge(computeAccelerations[body], 0, computePositions[body], 2); // acceleration
         }
 
-        // TO NBodyResultWriter_Task
-        for (int i = 0; i < N; i++) {
-            addEdge(computePositions[i], 0, writeResults, i*3); // position
-            addEdge(resolveCollisions, i, writeResults, i*3 + 1); // velocity
-            addEdge(computeAccelerations[i], 0, writeResults, i*3 + 2);
+        // ComputeAcceleration_Task TO ComputeVelocity_Task
+        for (int body = 0; body < N; body++) {
+            addEdge(computeAccelerations[body], 0, computeVelocities[body], 1); // acceleration
+        }
+
+        // ComputeAcceleration_Task TO NBodyResultWriter_Task
+        for (int body = 0; body < N; body++) {
+            addEdge(computeAccelerations[body], 0, writeResults, 3 * body + 2); // acceleration
+        }
+
+
+        // ComputePosition_Task TO ComputeCollisions_Task
+        for (int body = 0; body < N; body++) {
+            addEdge(computePositions[body], 0, computeCollisions, 2 * body); // position
+        }
+
+        // ComputePosition_Task TO NBodyResultWriter_Task
+        for (int body = 0; body < N; body++) {
+            addEdge(computePositions[body], 0, writeResults, 3 * body); // position
+        }
+
+        // ComputeVelocity_Task TO ComputeCollisions_Task
+        for (int body = 0; body < N; body++) {
+            addEdge(computeVelocities[body], 0, computeCollisions, 2 * body + 1); // velocity
+        }
+
+        // ComputeCollisions_Task TO NBodyResultWriter_Task
+        for (int body = 0; body < N; body++) {
+            addEdge(computeCollisions, body, writeResults, 3 * body + 1); // velocity
         }
 
         // TO wouts

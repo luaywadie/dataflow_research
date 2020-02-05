@@ -1,16 +1,22 @@
 import dataview.models.*;
 
+/**
+ * Input from: InitializeNBody_Task, ComputeAcceleration_Task
+ * Input to: ComputeCollisions_Task, NBodyResultWriter_Task
+ * Parallel with: ComputeVelocity_Task
+ */
+
 public class ComputePosition_Task extends Task {
     public ComputePosition_Task() {
         super("Compute Position", "Compute the position of one of the bodies");
 
         ins = new InputPort[3];
-        ins[0] = new InputPort("Position", Port.DATAVIEW_MathVector, "The current position of the body (BEFORE this time step");
-        ins[1] = new InputPort("Velocity", Port.DATAVIEW_MathVector, "The current velocity of the body (AT this time step)");
-        ins[2] = new InputPort("Acceleration", Port.DATAVIEW_MathVector, "The current acceleration of the body (AT this time step");
+        ins[0] = new InputPort("Position", Port.DATAVIEW_MathVector, "The current position of the body (calculated at the previous time step).");
+        ins[1] = new InputPort("Velocity", Port.DATAVIEW_MathVector, "The velocity of the body (calculated at the previous time step).");
+        ins[2] = new InputPort("Acceleration", Port.DATAVIEW_MathVector, "The acceleration of the body (calculated this time step)");
 
         outs = new OutputPort[1];
-        outs[0] = new OutputPort("Position", Port.DATAVIEW_MathVector, "The resulting position of the body (AT this time step)");
+        outs[0] = new OutputPort("Position", Port.DATAVIEW_MathVector, "The resulting position of the body.");
     }
 
     @Override

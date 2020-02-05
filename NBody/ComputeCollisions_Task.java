@@ -1,5 +1,11 @@
 import dataview.models.*;
 
+/**
+ * Input from: ComputePosition_Task, ComputeVelocity_Task
+ * Input to: NBodyResultWriter_Task
+ * Parallel with: Nothing
+ */
+
 public class ComputeCollisions_Task extends Task {
     public ComputeCollisions_Task() {
         super("Collisions", "Compute the collisions between bodies");
@@ -7,9 +13,9 @@ public class ComputeCollisions_Task extends Task {
         ins = new InputPort[NBodyWorkflow.N * 2];
         outs = new OutputPort[NBodyWorkflow.N];
         for (int i = 0; i < NBodyWorkflow.N; i++) {
-            ins[i*2] = new InputPort("Position " + i , Port.DATAVIEW_MathVector, "Position of body " + i / 2);
-            ins[i*2 + 1] = new InputPort("Input Velocity " + i / 2, Port.DATAVIEW_MathVector, "Velocity of body " + i / 2 + " before the collision");
-            outs[i] = new OutputPort("Output Velocity " + i / 2, Port.DATAVIEW_MathVector, "Velocity of body " + i / 2 + " after the collision");
+            ins[i*2] = new InputPort("Position", Port.DATAVIEW_MathVector, "Position of a body.");
+            ins[i*2 + 1] = new InputPort("Velocity" + i / 2, Port.DATAVIEW_MathVector, "Velocity of a body.");
+            outs[i] = new OutputPort("Velocity", Port.DATAVIEW_MathVector, "Velocity of a body.");
         }
     }
 
@@ -19,14 +25,15 @@ public class ComputeCollisions_Task extends Task {
         /* SETUP */
         Vector3D[] positions = new Vector3D[NBodyWorkflow.N];
         Vector3D[] velocities = new Vector3D[NBodyWorkflow.N];
-        for (int i = 0; i < NBodyWorkflow.N * 2; i += 2) {
-            DATAVIEW_MathVector rawPosition = (DATAVIEW_MathVector) ins[i].read();
-            // get x, y, z position components and make vector for it
-            positions[i/2] = new Vector3D(rawPosition.get(0), rawPosition.get(1), rawPosition.get(2));
 
-            DATAVIEW_MathVector rawVelocity = (DATAVIEW_MathVector) ins[i+1].read();
+        for (int i = 0; i < NBodyWorkflow.N; i++) {
+            DATAVIEW_MathVector rawPosition = (DATAVIEW_MathVector) ins[2*i].read();
+            // get x, y, z position components and make vector for it
+            positions[i] = new Vector3D(rawPosition.get(0), rawPosition.get(1), rawPosition.get(2));
+
+            DATAVIEW_MathVector rawVelocity = (DATAVIEW_MathVector) ins[2*i + 1].read();
             // get x, y, z velocity components and make vector for it
-            velocities[i/2] = new Vector3D(rawVelocity.get(0), rawVelocity.get(1), rawVelocity.get(2));
+            velocities[i] = new Vector3D(rawVelocity.get(0), rawVelocity.get(1), rawVelocity.get(2));
         }
 
         /* ACTUAL CALCULATION */

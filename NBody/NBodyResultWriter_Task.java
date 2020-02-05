@@ -1,7 +1,9 @@
 import dataview.models.*;
 
 /**
- * This task is for writing the vector results of ComputeAccelerations.
+ * Input from:  ComputeAcceleration_Task, ComputePosition_Task, ComputeCollisions_Task
+ * Outputs: Lists of the results
+ * Parallel with: Nothing
  */
 public class NBodyResultWriter_Task extends Task {
     public NBodyResultWriter_Task() {
