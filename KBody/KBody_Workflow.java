@@ -50,11 +50,11 @@ public class KBody_Workflow extends Workflow {
         addEdge(1, task_initialize, 1);
         addEdge(2, task_initialize, 2);
 
-        // KBody_Initialize_Task -> TEST OUTS
+
+        /* TEST EDGES */
+        // KBody_Initialize_Task -> KBody_Acceleration_Task
         for (int body = 0; body < k; body ++) {
-            addEdge(task_initialize, 3 * body, 3 * body);
-            addEdge(task_initialize, 3 * body + 1, 3 * body + 1);
-            addEdge(task_initialize, 3 * body + 2, 3 * body + 2);
+            //for (int taskInstance = 0)
         }
 
     }
