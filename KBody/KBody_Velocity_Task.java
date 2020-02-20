@@ -7,7 +7,7 @@ import dataview.models.Task;
 
 public class KBody_Velocity_Task extends Task {
 	public KBody_Velocity_Task() {
-		super("KBody_Velocity_Task","Calculates the velocity of ");
+		super("Compute Velocity","Compute the Velocity of a single body");
 
 		// Inputs Ports
 		ins = new InputPort[2];
