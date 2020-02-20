@@ -22,11 +22,10 @@ public class KBody_Workflow extends Workflow {
         wins[1] = new DATAVIEW_BigFile(VELOCITY_INPUT);
         wins[2] = new DATAVIEW_BigFile(MASS_INPUT);
 
-        wouts = new Object[9];
-        for (int i = 0; i < wouts.length; i++) {
-            wouts[i] = new DATAVIEW_BigFile("INIT_TEST_" + i + ".test");
-        }
-//        wouts = new Object[3];
+        wouts = new Object[3];
+        wouts[0] = new DATAVIEW_BigFile("TEST_ACCEL_0.test");
+        wouts[1] = new DATAVIEW_BigFile("TEST_ACCEL_1.test");
+        wouts[2] = new DATAVIEW_BigFile("TEST_ACCEL_2.test");
     }
 
     public void design() {
@@ -34,7 +33,7 @@ public class KBody_Workflow extends Workflow {
         // initialization
         Task task_initialize = addTask("KBody_Initialize_Task");
         // acceleration
-//        Task[] tasks_acceleration= addTasks("KBody_Acceleration_Task", k);
+        Task[] tasks_acceleration= addTasks("KBody_Acceleration_Task", k);
 //        // velocity
 //        Task[] tasks_velocity = addTasks("KBody_Velocity_Task", k);
 //        // position
@@ -53,9 +52,25 @@ public class KBody_Workflow extends Workflow {
 
         /* TEST EDGES */
         // KBody_Initialize_Task -> KBody_Acceleration_Task
+        int positionIndex = -1;
+        int massIndex = - 1;
         for (int body = 0; body < k; body ++) {
-            //for (int taskInstance = 0)
+            for (int taskInstance = 0; taskInstance < k; taskInstance++) {
+                if (body == taskInstance) { // 0th input to instance i of Acceleration is always position of body i
+                    addEdge(task_initialize, 3 * body, tasks_acceleration[taskInstance], 0);
+                    positionIndex = body * 2 - 1;
+                    massIndex = positionIndex + 1;
+                } else {
+                    addEdge(task_initialize, 3 * body, tasks_acceleration[taskInstance], positionIndex);
+                    addEdge(task_initialize, 3 * body + 2, tasks_acceleration[taskInstance], massIndex);
+                }
+            }
         }
 
+
+        // KBody_Acceleration_Task -> TEST OUT
+        addEdge(tasks_acceleration[0], 0,0);
+        addEdge(tasks_acceleration[1], 0,1);
+        addEdge(tasks_acceleration[2], 0,2);
     }
 }

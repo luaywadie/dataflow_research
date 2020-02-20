@@ -28,12 +28,15 @@ public class KBody_Acceleration_Task extends Task {
         // read the inputs
         DATAVIEW_MathVector rawThisPosition = (DATAVIEW_MathVector)ins[0].read();
         Vector3D thisPosition = new Vector3D(rawThisPosition.get(0), rawThisPosition.get(1), rawThisPosition.get(2));
+        System.out.println("\tThis position: " + thisPosition.toString());
         Vector3D[] otherPositions = new Vector3D[KBody_Workflow.k - 1];
         double[] otherMasses = new double[KBody_Workflow.k - 1];
         for (int otherBody = 0; otherBody < KBody_Workflow.k - 1; otherBody++) {
             DATAVIEW_MathVector rawOtherPosition = (DATAVIEW_MathVector) ins[1 + (2 * otherBody)].read();
             otherPositions[otherBody] = new Vector3D(rawOtherPosition.get(0), rawOtherPosition.get(1), rawOtherPosition.get(2));
+            System.out.println("\tOther positions " + otherBody + ": " + otherPositions[otherBody].toString());
             otherMasses[otherBody] = (double) ins[2 + (2 * otherBody)].read();
+            System.out.println("\tOther mass " + otherBody + ": " + otherMasses[otherBody]);
         }
 
         // perform the actual calculation
