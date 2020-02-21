@@ -1,3 +1,4 @@
+
 import dataview.models.*;
 
 /**
@@ -15,10 +16,10 @@ public class ComputeAcceleration_Task extends Task {
         super("Compute Acceleration", "Computes the accelerations of an individual body at the" +
                 " current time step.");
         // need position of all bodies, and mass of all bodies except the one for which we are calculating acceleration
-        ins = new InputPort[2*(NBodyWorkflow.N)];
+        ins = new InputPort[2*(NBodyWorkflow.N) -1]; //Changed *********************************
         //ins[0] = new InputPort("Index", Port.DATAVIEW_int, "Index i of the body; 0 <= i < N");
         ins[0] = new InputPort("Position", Port.DATAVIEW_MathVector, "Position of the body for which we are calculating acceleration.");
-        for (int i = 1; i < NBodyWorkflow.N - 1; i += 1) {
+        for (int i = 1; i < NBodyWorkflow.N; i++) {
             // +1 because index 0 is reserved for the position of the body for which we are calculating acceleration
             ins[2 * i - 1] = new InputPort("Position", Port.DATAVIEW_MathVector, "Position of one of the bodies for which we are NOT calculating acceleration.");
             ins[2 * i] = new InputPort("Mass", Port.DATAVIEW_double, "Mass of one of the bodies for which we are NOT calculating acceleration.");
