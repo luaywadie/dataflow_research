@@ -136,26 +136,45 @@ public class NBodyWorkflow extends Workflow {
             addEdge(computeCollisions[0], body, writeResults, 3 * body + 1); // velocity
         }
 
+        // handle inter-time step edges
         for (int timeStep = 1; timeStep < timeSteps; timeStep++) { // add edges FROM timeStep-1 time step, to timeStep
             for (int body = 0; body < N; body++) {
-                int prevPositionIndex = N * (timeStep - 1) + body; // index for previous Position task
-                int currentTaskIndex = N * timeStep + body; // index for
+                int previousTaskIndex = N * (timeStep - 1) + body;
+                int currentTaskIndex = N * timeStep + body;
 
-                massIndex = 2;
-                int inputIndex = 1;// BETTER NAME
-                addEdge(computePositions[prevPositionIndex], 0, computeVelocities[currentTaskIndex], 0);
-                addEdge(computeCollisions[timeStep - 1], 0, computePositions[timeStep], 0);
-                for (int taskInstance = N * timeStep; taskInstance < N * timeStep + N; taskInstance++) {
-                    if (!(taskInstance % N == body)) {
-                        addEdge(initialize, massIndex, computeAccelerations[taskInstance], inputIndex);
-                        massIndex += 3;
-                    }
-                     else {
-                         inputIndex += 2;
-                    }
-
+                // from Acceleration to Acceleration (propagates masses)
+                for (int out = 1; out < NBodyWorkflow.N; out++) {
+                    addEdge(computeAccelerations[previousTaskIndex], out, computeAccelerations[currentTaskIndex], out * 2);
                 }
+
+                // from Position to Acceleration (gives position of all bodies to acceleration similar to how initialize does it)
+                int positionInputIndex = -1;
+                for (int i = 0; i < N; i++) { // i represents the acceleration task instance for body i relative to this time step
+                    if (i == body) {  // position goes to input 0
+                        addEdge(computePositions[previousTaskIndex], 0, computeAccelerations[currentTaskIndex], 0);
+                        positionIndex += 2 * body + 1;
+                    } else {
+                        addEdge(computePositions[previousTaskIndex], 0, computeAccelerations[currentTaskIndex], positionInputIndex);
+                    }
+                }
+
+                // from Position to Position (position of current body)
+                addEdge(computePositions[previousTaskIndex], 0, computePositions[currentTaskIndex], 0);
+
+                // from Collision to Velocity (gives velocity at previous time step for a single body to its next time step task)
+                addEdge(computeCollisions[timeStep - 1], body, computePositions[currentTaskIndex], 1);
+                addEdge(computeCollisions[timeStep - 1], body, computeVelocities[currentTaskIndex], 0);
             }
+        }
+
+        // add edges to the final task (result writer), which does not occur at each iteration
+        for (int body = 0; body < N; body++) {
+            // position
+            addEdge(computePositions[(timeSteps - 1) * N + body], 0, writeResults, 3 * body);
+            // velocity
+            addEdge(computeCollisions[timeSteps - 1], body, writeResults, 3 * body + 1);
+            // acceleration
+            addEdge(computeAccelerations[(timeSteps - 1) * N + body], 0, writeResults, 3 * body + 2);
         }
 
         // TO wouts
