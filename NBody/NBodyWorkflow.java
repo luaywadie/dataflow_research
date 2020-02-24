@@ -21,7 +21,7 @@ public class NBodyWorkflow extends Workflow {
      */
     public static final double gc = 0.05; // gravitational constant
     public static final int N = 3; // number of bodies
-    public static final int timeSteps = 20; // time to advance each iteration
+    public static final int timeSteps = 3; // time to advance each iteration
 
     public NBodyWorkflow() {
         super("N-Body Simulation", "A simulation of N-bodies' gravitational interactions.");
@@ -63,85 +63,61 @@ public class NBodyWorkflow extends Workflow {
         addEdge(1, initialize, 1); // velocity input file
         addEdge(2, initialize, 2); // mass input file
 
-        // from Initialize -> The first ComputeAcceleration_Task
-        ;
-
-        // InitializeNBody_Task TO ComputeAcceleration_Task;
+        // InitializeNBody_Task TO time step 0 ComputeAcceleration_Task
         int positionIndex = -1; // the input port in which to feed body's position
         int massIndex = -1; // the input port in which to feed body's mass
         for (int body = 0; body < N; body++) {
             for (int taskInstance = 0; taskInstance < N; taskInstance++) {
                 if (body == taskInstance) { // task corresponds to body
-
                     addEdge(initialize, 3 * body, computeAccelerations[taskInstance], 0); // position
-                    positionIndex = 2 * body + 1;  // TODO: Describe why this is being done, and why we need it
-                    massIndex = positionIndex + 1; // TODO: Describe why this is being done, and why we need it
-                }
-                else { // task does not correspond to the body
+                    positionIndex = 2 * body + 1;
+                    massIndex = positionIndex + 1;
+                } else { // task does not correspond to the body
 
-                    System.out.printf("\tFor body %d,: connecting OUT %d, %d to IN %d, %d\n", body, 3 * body, 3 * body + 1, positionIndex, massIndex);
+                    System.out.printf("\t\u001b[33m\tFor body %d,: connecting OUT %d, %d to IN %d, %d\n\u001b[0m", body, 3 * body, 3 * body + 1, positionIndex, massIndex);
                     addEdge(initialize, 3 * body, // position is an offset of 0
                             computeAccelerations[taskInstance], positionIndex);
                     addEdge(initialize, 3 * body + 2, // mass is an offset of 2
                             computeAccelerations[taskInstance], massIndex);
+                    System.out.printf("\t\u001b[33m\tFor body %d,: connecting OUT %d, %d to IN %d, %d\n\u001b[0m", body, 3 * body, 3 * body + 1, positionIndex, massIndex);
+
                 }
             }
-        }
 
-
-        // InitializeNBody_Task TO Compute_Position_Task
-        for (int body = 0; body < N; body++) {
+            // InitializeNBody_Task TO time step 0 Compute_Position_Task
             addEdge(initialize, 3 * body, computePositions[body], 0); // position
+            System.out.printf("\t\u001b[33mFor body %d,: connecting OUT %d, %d to IN %d, %d\n\u001b[0m", body, 3 * body, 3 * body + 1, positionIndex, massIndex);
             addEdge(initialize, 3 * body + 1, computePositions[body], 1); // velocity
-        }
 
-        // InitializeNBody_Task TO Compute_Velocity_Task
-        for (int body = 0; body < N; body++) {
+            // InitializeNBody_Task TO time step 0 Compute_Velocity_Task
             addEdge(initialize, 3 * body + 1, computeVelocities[body], 0); // velocity
         }
 
+        /* intra-time-step edges (within one time step) */
+        for (int timeStep = 0; timeStep < timeSteps; timeStep++) { // add edges FROM timeStep-1 time step, to timeStep
+            for (int body = 0; body < N; body++) {
+                int currentTaskIndex = N * timeStep + body;
 
-        // ComputeAcceleration_Task TO ComputePosition_Task
-        for (int body = 0; body < N; body++) {
-            addEdge(computeAccelerations[body], 0, computePositions[body], 2); // acceleration
+                /* intra-time-step edges */
+                // ComputeAcceleration_Task TO ComputePosition_Task
+                addEdge(computeAccelerations[currentTaskIndex], 0, computePositions[currentTaskIndex], 2); // acceleration
+
+                // ComputeAcceleration_Task TO ComputeVelocity_Task
+                addEdge(computeAccelerations[currentTaskIndex], 0, computeVelocities[currentTaskIndex], 1); // acceleration
+
+                // ComputePosition_Task TO ComputeCollisions_Task
+                addEdge(computePositions[body], 0, computeCollisions[0], 2 * body); // position
+
+                // ComputeVelocity_Task TO ComputeCollisions_Task
+                addEdge(computeVelocities[body], 0, computeCollisions[0], 2 * body + 1); // velocity
+            }
         }
 
-        // ComputeAcceleration_Task TO ComputeVelocity_Task
-        for (int body = 0; body < N; body++) {
-            addEdge(computeAccelerations[body], 0, computeVelocities[body], 1); // acceleration
-        }
-
-        // ComputeAcceleration_Task TO NBodyResultWriter_Task
-        for (int body = 0; body < N; body++) {
-            addEdge(computeAccelerations[body], 0, writeResults, 3 * body + 2); // acceleration
-        }
-
-        // ComputePosition_Task TO ComputeCollisions_Task
-        for (int body = 0; body < N; body++) {
-            addEdge(computePositions[body], 0, computeCollisions[0], 2 * body); // position
-        }
-
-        // ComputePosition_Task TO NBodyResultWriter_Task
-        for (int body = 0; body < N; body++) {
-            addEdge(computePositions[body], 0, writeResults, 3 * body); // position
-        }
-
-        // ComputeVelocity_Task TO ComputeCollisions_Task
-        for (int body = 0; body < N; body++) {
-            addEdge(computeVelocities[body], 0, computeCollisions[0], 2 * body + 1); // velocity
-        }
-
-        // ComputeCollisions_Task TO NBodyResultWriter_Task
-        for (int body = 0; body < N; body++) {
-            addEdge(computeCollisions[0], body, writeResults, 3 * body + 1); // velocity
-        }
-
-        // handle inter-time step edges
+        /* inter-time step edges (between two time steps) */
         for (int timeStep = 1; timeStep < timeSteps; timeStep++) { // add edges FROM timeStep-1 time step, to timeStep
             for (int body = 0; body < N; body++) {
                 int previousTaskIndex = N * (timeStep - 1) + body;
                 int currentTaskIndex = N * timeStep + body;
-
                 // from Acceleration to Acceleration (propagates masses)
                 for (int out = 1; out < NBodyWorkflow.N; out++) {
                     addEdge(computeAccelerations[previousTaskIndex], out, computeAccelerations[currentTaskIndex], out * 2);
@@ -167,7 +143,7 @@ public class NBodyWorkflow extends Workflow {
             }
         }
 
-        // add edges to the final task (result writer), which does not occur at each iteration
+        // add edges to the final task (result writer) from the final outputs from the last time step
         for (int body = 0; body < N; body++) {
             // position
             addEdge(computePositions[(timeSteps - 1) * N + body], 0, writeResults, 3 * body);
