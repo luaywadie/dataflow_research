@@ -14,7 +14,7 @@ This project will establish the guidelines and understanding of a scientific wor
   - Semantic PEMDAS Support ❗
 - [Parse Tree Listener](https://github.com/luaywadie/dataflow_research/tree/master/builds/parse_tree_listener) ⟲
   - Create a walker that traverses over the identified nodes ⟲
-- [Workflow System (Celestial Bodies Example)[https://github.com/luaywadie/dataflow_research/tree/master/NBody] ⟲
+- [Workflow System (Celestial Bodies Example)](https://github.com/luaywadie/dataflow_research/tree/master/NBody) ⟲
   - Iteration 0 to update bodies based on Position, Velocity and Mass. ✔
   - Continuous iterations based on time steps. ⟲
 
