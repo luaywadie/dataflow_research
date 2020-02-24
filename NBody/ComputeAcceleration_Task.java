@@ -30,8 +30,11 @@ public class ComputeAcceleration_Task extends Task {
 //            ins[2 * i] = new InputPort("Mass", Port.DATAVIEW_double, "Mass of one of the bodies for which we are NOT calculating acceleration.");
 //        }
         // just output the acceleration of the body
-        outs = new OutputPort[1];
+        outs = new OutputPort[NBodyWorkflow.N];
         outs[0] = new OutputPort("Acceleration", Port.DATAVIEW_MathVector, "The result of calculating this body's acceleration.");
+        for (int i = 1; i < NBodyWorkflow.N; i++) {
+        	outs[i] = new OutputPort("Mass", Port.DATAVIEW_double,"Mass of one of the bodies for which we are NOT calculating acceleration");
+        }
     }
 
     @Override
@@ -58,6 +61,10 @@ public class ComputeAcceleration_Task extends Task {
             resultAccel = resultAccel.plus(otherPositions[otherBody].minus(thisPosition).times(temp));
         }
 
+        // Write output of this task
         outs[0].write(resultAccel);
+        for (int i = 1; i < NBodyWorkflow.N; i++) {
+        	outs[i].write(otherMasses[i - 1]);
+        }
     }
 }
