@@ -1,13 +1,16 @@
 import dataview.models.*;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
- * Input from: InitializeNBody_Task, ComputeAcceleration_Task
- * Input to: ComputeCollisions_Task, NBodyResultWriter_Task
- * Parallel with: ComputeVelocity_Task
+ * Input from: InitializeNBody_Task, Acc
+ * Input to: Coll, NBodyResultWriter_Task
+ * Parallel with: Vel
  */
 
-public class ComputePosition_Task extends Task {
-    public ComputePosition_Task() {
+public class Pos extends Task {
+    public Pos() {
         super("Compute Position", "Compute the position of one of the bodies");
 
         ins = new InputPort[3];
@@ -21,6 +24,15 @@ public class ComputePosition_Task extends Task {
 
     @Override
     public void run() {
+        System.out.println("\u001b[36m IN POSITION;\n\t ABOUT TO WRITE TO " + outs[0].getFileName());
+
+        try{
+            File f = new File(outs[0].getFileName());
+            f.createNewFile();
+        } catch (IOException e) {
+            System.exit(0);
+        }
+
         /* SETUP */
         DATAVIEW_MathVector rawPosition = (DATAVIEW_MathVector) ins[0].read();
         Vector3D position = new Vector3D(rawPosition.get(0), rawPosition.get(1), rawPosition.get(2));

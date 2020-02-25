@@ -5,14 +5,14 @@ import dataview.models.*;
  * This task handles the computation of the acceleration of 1 of the N bodies. There will need to be 1 instance of this
  * task for each time step AND body in the simulation (e.g. 5 bodies and 20 time step –> 5*20 = 100 instances).
  * Input from: InitializeNBody_Task
- * Input to: ComputePosition_Task, ComputeVelocity_Task, NBodyResultWriter_Task
+ * Input to: Pos, Vel, NBodyResultWriter_Task
  * Parallel with: Nothing
 
  */
 
-public class ComputeAcceleration_Task extends Task {
+public class Acc extends Task {
 
-    public ComputeAcceleration_Task() {
+    public Acc() {
         super("Compute Acceleration", "Computes the accelerations of an individual body at the" +
                 " current time step.");
         // need position of all bodies, and mass of all bodies except the one for which we are calculating acceleration
@@ -62,9 +62,11 @@ public class ComputeAcceleration_Task extends Task {
         }
 
         // Write output of this task
+        System.out.println("\u001b[36m IN ACCELERATION;\n\t ABOUT TO WRITE TO " + outs[0].getFileName());
         outs[0].write(resultAccel);
         for (int i = 1; i < NBodyWorkflow.N; i++) {
-        	outs[i].write(otherMasses[i - 1]);
+            System.out.println("\u001b[36m \n\t ABOUT TO WRITE TO " + outs[i].getFileName());
+            outs[i].write(otherMasses[i - 1]);
         }
     }
 }
