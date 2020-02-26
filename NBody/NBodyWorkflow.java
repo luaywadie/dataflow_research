@@ -118,11 +118,11 @@ public class NBodyWorkflow extends Workflow {
                 int currentTaskIndex = N * timeStep + body;
                 // from Acceleration to Acceleration (propagates masses)
                 for (int out = 1; out < NBodyWorkflow.N; out++) {
-                    addEdge(computeAccelerations[previousTaskIndex], out, computeAccelerations[currentTaskIndex], out * 2);
+                    addEdge(computeAccelerations[previousTaskIndex], out, computeAccelerations[currentTaskIndex], 2 * out - 1); // changed input index arg from 2 * out
                 }
 
                 // from Position to Acceleration (gives position of all bodies to acceleration similar to how initialize does it)
-                int positionInputIndex = -1;
+                int positionInputIndex = -1; // IDEA: this should not be reinitialized for each body, only for each time step
                 for (int i = 0; i < N; i++) { // i represents the acceleration task instance for body i relative to this time step
                     if (i == body) {  // position goes to input 0
                         addEdge(computePositions[previousTaskIndex], 0, computeAccelerations[currentTaskIndex], 0);

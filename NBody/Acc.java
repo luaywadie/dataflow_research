@@ -40,18 +40,32 @@ public class Acc extends Task {
     @Override
     public void run() {
         /* SETUP */
-        DATAVIEW_MathVector rawThisPosition = (DATAVIEW_MathVector) ins[0].read();
-        Vector3D thisPosition = new Vector3D(rawThisPosition.get(0), rawThisPosition.get(1), rawThisPosition.get(2));
+//        DATAVIEW_MathVector rawThisPosition = (DATAVIEW_MathVector) ins[0].read();
+//        Vector3D thisPosition = new Vector3D(rawThisPosition.get(0), rawThisPosition.get(1), rawThisPosition.get(2));
 
-        // read the inputs to get the relevant data from all of the bodies which we are NOT calculating the acceleration for
+//        // read the inputs to get the relevant data from all of the bodies which we are NOT calculating the acceleration for
+////        Vector3D[] otherPositions = new Vector3D[NBodyWorkflow.N - 1];
+////        double[] otherMasses = new double[NBodyWorkflow.N - 1];
+////        // baseBodyIndex references the first piece of data (position) of a body, baseBodyIndex + 1 references the second (mass)
+////        for (int baseBodyIndex = 1; baseBodyIndex < (2 * NBodyWorkflow.N) - 1; baseBodyIndex += 2) {
+////            DATAVIEW_MathVector rawPosition = (DATAVIEW_MathVector) ins[baseBodyIndex].read();
+////            // baseBodyIndex / 2 will go from 0 to N - 1
+////            otherPositions[baseBodyIndex / 2] = new Vector3D(rawPosition.get(0), rawPosition.get(1), rawPosition.get(2));
+////            otherMasses[baseBodyIndex / 2] = (double) ins[baseBodyIndex + 1].read();
+////        }
+
+        // read the inputs
+        DATAVIEW_MathVector rawThisPosition = (DATAVIEW_MathVector)ins[0].read();
+        Vector3D thisPosition = new Vector3D(rawThisPosition.get(0), rawThisPosition.get(1), rawThisPosition.get(2));
+        System.out.println("\tThis position: " + thisPosition.toString());
         Vector3D[] otherPositions = new Vector3D[NBodyWorkflow.N - 1];
-        double[] otherMasses = new double[NBodyWorkflow.N - 1];
-        // baseBodyIndex references the first piece of data (position) of a body, baseBodyIndex + 1 references the second (mass)
-        for (int baseBodyIndex = 1; baseBodyIndex < (2 * NBodyWorkflow.N) - 1; baseBodyIndex += 2) {
-            DATAVIEW_MathVector rawPosition = (DATAVIEW_MathVector) ins[baseBodyIndex].read();
-            // baseBodyIndex / 2 will go from 0 to N - 1
-            otherPositions[baseBodyIndex / 2] = new Vector3D(rawPosition.get(0), rawPosition.get(1), rawPosition.get(2));
-            otherMasses[baseBodyIndex / 2] = (double) ins[baseBodyIndex + 1].read();
+        double[] otherMasses = new double[NBodyWorkflow.N- 1];
+        for (int otherBody = 0; otherBody < NBodyWorkflow.N - 1; otherBody++) {
+            DATAVIEW_MathVector rawOtherPosition = (DATAVIEW_MathVector) ins[1 + (2 * otherBody)].read();
+            otherPositions[otherBody] = new Vector3D(rawOtherPosition.get(0), rawOtherPosition.get(1), rawOtherPosition.get(2));
+            System.out.println("\tOther positions " + otherBody + ": " + otherPositions[otherBody].toString());
+            otherMasses[otherBody] = (double) ins[2 + (2 * otherBody)].read();
+            System.out.println("\tOther mass " + otherBody + ": " + otherMasses[otherBody]);
         }
 
         /* ACTUAL CALCULATION */
