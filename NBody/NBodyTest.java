@@ -9,8 +9,10 @@ import java.io.IOException;
 
 public class NBodyTest {
     public static void main(String[] args) throws IOException {
+        WorkflowVisualization frame = new WorkflowVisualization();
         NBodyWorkflow w = new NBodyWorkflow();
         w.design();
+        frame.drawWorkflowGraph(w);
         WorkflowPlanner wp = new WorkflowPlanner_Naive2(w);
         GlobalSchedule gsch = wp.plan();
         System.out.println(gsch.getSpecification());
