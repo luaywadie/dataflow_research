@@ -42,16 +42,16 @@ public class NBodyWorkflow extends Workflow {
         Task initialize = addTask("InitializeNBody_Task");
 
         // 1: accelerations
-        Task[] computeAccelerations = addTasks("ComputeAcceleration_Task", N * timeSteps);
+        Task[] computeAccelerations = addTasks("Acc", N * timeSteps);
 
         // 2: velocities
-        Task[] computeVelocities = addTasks("ComputeVelocity_Task", N * timeSteps);
+        Task[] computeVelocities = addTasks("Vel", N * timeSteps);
 
         // 3: positions
-        Task[] computePositions = addTasks("ComputePosition_Task", N * timeSteps);
+        Task[] computePositions = addTasks("Pos", N * timeSteps);
 
         // 4: collisions
-        Task[] computeCollisions = addTasks("ComputeCollisions_Task", timeSteps);
+        Task[] computeCollisions = addTasks("Coll", timeSteps);
 
         // 5: write results
         Task writeResults = addTask("NBodyResultWriter_Task");
@@ -63,7 +63,7 @@ public class NBodyWorkflow extends Workflow {
         addEdge(1, initialize, 1); // velocity input file
         addEdge(2, initialize, 2); // mass input file
 
-        // InitializeNBody_Task TO time step 0 ComputeAcceleration_Task
+        // InitializeNBody_Task TO time step 0 Acc
         int positionIndex = -1; // the input port in which to feed body's position
         int massIndex = -1; // the input port in which to feed body's mass
         for (int body = 0; body < N; body++) {
@@ -74,12 +74,10 @@ public class NBodyWorkflow extends Workflow {
                     massIndex = positionIndex + 1;
                 } else { // task does not correspond to the body
 
-                    System.out.printf("\t\u001b[33m\tFor body %d,: connecting OUT %d, %d to IN %d, %d\n\u001b[0m", body, 3 * body, 3 * body + 1, positionIndex, massIndex);
                     addEdge(initialize, 3 * body, // position is an offset of 0
                             computeAccelerations[taskInstance], positionIndex);
                     addEdge(initialize, 3 * body + 2, // mass is an offset of 2
                             computeAccelerations[taskInstance], massIndex);
-                    System.out.printf("\t\u001b[33m\tFor body %d,: connecting OUT %d, %d to IN %d, %d\n\u001b[0m", body, 3 * body, 3 * body + 1, positionIndex, massIndex);
 
                 }
             }
@@ -99,17 +97,17 @@ public class NBodyWorkflow extends Workflow {
                 int currentTaskIndex = N * timeStep + body;
 
                 /* intra-time-step edges */
-                // ComputeAcceleration_Task TO ComputePosition_Task
+                // Acc TO Pos
                 addEdge(computeAccelerations[currentTaskIndex], 0, computePositions[currentTaskIndex], 2); // acceleration
 
-                // ComputeAcceleration_Task TO ComputeVelocity_Task
+                // Acc TO Vel
                 addEdge(computeAccelerations[currentTaskIndex], 0, computeVelocities[currentTaskIndex], 1); // acceleration
 
-                // ComputePosition_Task TO ComputeCollisions_Task
-                addEdge(computePositions[body], 0, computeCollisions[0], 2 * body); // position
+                // Pos TO Coll
+                addEdge(computePositions[currentTaskIndex], 0, computeCollisions[timeStep], 2 * body); // position
 
-                // ComputeVelocity_Task TO ComputeCollisions_Task
-                addEdge(computeVelocities[body], 0, computeCollisions[0], 2 * body + 1); // velocity
+                // Vel TO Coll
+                addEdge(computeVelocities[currentTaskIndex], 0, computeCollisions[timeStep], 2 * body + 1); // velocity
             }
         }
 
