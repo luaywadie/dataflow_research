@@ -11,7 +11,6 @@ This project will establish the guidelines and understanding of a scientific wor
 - [Arithmetic (Basic)](https://github.com/luaywadie/dataflow_research/tree/master/builds/arithmetic) ✔
   - Creating a simple input recognizer for digits and variables ✔
   - Inline support for functions and methods (Semantic) ✔
-  - Semantic PEMDAS Support ❗
 - [Parse Tree Listener](https://github.com/luaywadie/dataflow_research/tree/master/builds/parse_tree_listener) ⟲
   - Create a walker that traverses over the identified nodes ⟲
 - [Workflow System (Celestial Bodies Example)](https://github.com/luaywadie/dataflow_research/tree/master/NBody) ✔
