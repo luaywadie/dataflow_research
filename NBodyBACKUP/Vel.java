@@ -1,13 +1,16 @@
 import dataview.models.*;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
- * Input from: InitializeNBody_Task, ComputeAcceleration_Task
- * Input to: ComputeCollisions_Task
- * Parallel with: ComputeVelocity_Task
+ * Input from: InitializeNBody_Task, Acc
+ * Input to: Coll
+ * Parallel with: Vel
  */
 
-public class ComputeVelocity_Task extends Task {
-    public ComputeVelocity_Task() {
+public class Vel extends Task {
+    public Vel() {
         super("Compute Velocity", "Compute the velocity of one of the bodies");
 
         ins = new InputPort[2];
@@ -20,6 +23,13 @@ public class ComputeVelocity_Task extends Task {
 
     @Override
     public void run() {
+        try{
+            File f = new File(outs[0].getFileName());
+            f.createNewFile();
+        } catch (IOException e) {
+            System.exit(0);
+        }
+
         /* SETUP */
         DATAVIEW_MathVector rawVelocity = (DATAVIEW_MathVector) ins[0].read();
         Vector3D initialVelocity = new Vector3D(rawVelocity.get(0), rawVelocity.get(1), rawVelocity.get(2));
@@ -29,7 +39,6 @@ public class ComputeVelocity_Task extends Task {
 
         /* ACTUAL CALCULATION */
         Vector3D resultVelocity = initialVelocity.plus(acceleration);
-
         outs[0].write(resultVelocity);
     }
 }

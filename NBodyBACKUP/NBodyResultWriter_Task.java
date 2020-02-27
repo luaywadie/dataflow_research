@@ -1,7 +1,7 @@
 import dataview.models.*;
 
 /**
- * Input from:  ComputeAcceleration_Task, ComputePosition_Task, ComputeCollisions_Task
+ * Input from:  Acc, Pos, Coll
  * Outputs: Lists of the results
  * Parallel with: Nothing
  */
@@ -30,6 +30,7 @@ public class NBodyResultWriter_Task extends Task {
 
         for (int row = 0; row < NBodyWorkflow.N; row++) {
             // write each row of of the resulting position matrix
+            System.out.println("CANT FIND " + ins[row*3].getFileName());
             DATAVIEW_MathVector rawPosition = (DATAVIEW_MathVector) ins[row*3].read();
             positions[row][0] = rawPosition.get(0);
             positions[row][1] = rawPosition.get(1);

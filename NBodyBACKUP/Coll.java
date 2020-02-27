@@ -1,13 +1,16 @@
 import dataview.models.*;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
- * Input from: ComputePosition_Task, ComputeVelocity_Task
+ * Input from: Pos, Vel
  * Input to: NBodyResultWriter_Task
  * Parallel with: Nothing
  */
 
-public class ComputeCollisions_Task extends Task {
-    public ComputeCollisions_Task() {
+public class Coll extends Task {
+    public Coll() {
         super("Collisions", "Compute the collisions between bodies");
 
         ins = new InputPort[NBodyWorkflow.N * 2];
@@ -27,6 +30,7 @@ public class ComputeCollisions_Task extends Task {
         Vector3D[] velocities = new Vector3D[NBodyWorkflow.N];
 
         for (int i = 0; i < NBodyWorkflow.N; i++) {
+
             DATAVIEW_MathVector rawPosition = (DATAVIEW_MathVector) ins[2*i].read();
             // get x, y, z position components and make vector for it
             positions[i] = new Vector3D(rawPosition.get(0), rawPosition.get(1), rawPosition.get(2));
@@ -49,6 +53,12 @@ public class ComputeCollisions_Task extends Task {
         }
 
         for (int i = 0; i < NBodyWorkflow.N; i++) {
+            try{
+                File f = new File(outs[i].getFileName());
+                f.createNewFile();
+            } catch (IOException e) {
+                System.exit(0);
+            }
             outs[i].write(velocities[i]);
         }
     }
