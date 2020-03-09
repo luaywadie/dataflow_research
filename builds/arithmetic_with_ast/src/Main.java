@@ -22,14 +22,11 @@ public class Main {
             ArithmeticParser.RootContext cstRoot = parser.root();
             // build the AST by visiting the cstRoot, which will descend the CST
             ASTBuilderVisitor astBuilder = new ASTBuilderVisitor();
-            // OLD RootNode astRoot = astBuilder.visitRoot(cstRoot);
-            // NEW: build using accept
+            // begin building the AST from the root CST node
             RootNode astRoot = (RootNode) cstRoot.accept(astBuilder);
             System.out.println();
-            // now evaluate beginning with the root, which will call Visit on the children nodes
+            // evaluate, beginning at the root node and recursively descending through the AST
             ASTEvaluationVisitor evaluator = new ASTEvaluationVisitor();
-            // OLD evaluator.Visit(astRoot);
-            // NEW: evaluate using accept
             astRoot.accept(evaluator);
 
         } catch (FileNotFoundException e) {
