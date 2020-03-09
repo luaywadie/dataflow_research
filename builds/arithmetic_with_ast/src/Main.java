@@ -21,13 +21,13 @@ public class Main {
             // get the root CST node
             ArithmeticParser.RootContext cstRoot = parser.root();
             // build the AST by visiting the cstRoot, which will descend the CST
-            AstBuilderVisitor astBuilder = new AstBuilderVisitor();
+            ASTBuilderVisitor astBuilder = new ASTBuilderVisitor();
             // OLD RootNode astRoot = astBuilder.visitRoot(cstRoot);
             // NEW: build using accept
             RootNode astRoot = (RootNode) cstRoot.accept(astBuilder);
             System.out.println();
             // now evaluate beginning with the root, which will call Visit on the children nodes
-            AstEvaluationVisitor evaluator = new AstEvaluationVisitor();
+            ASTEvaluationVisitor evaluator = new ASTEvaluationVisitor();
             // OLD evaluator.Visit(astRoot);
             // NEW: evaluate using accept
             astRoot.accept(evaluator);
