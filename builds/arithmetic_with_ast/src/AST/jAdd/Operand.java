@@ -1,23 +1,16 @@
 /* This file was generated with JastAdd2 (http://jastadd.org) version 2.3.3 */
 /**
  * @ast node
- * @declaredat Arithmetic.ast:43
- * @astdecl StatementNode : ASTNode;
- * @production StatementNode : {@link ASTNode};
+ * @declaredat Arithmetic.ast:48
+ * @astdecl Operand : ASTNode;
+ * @production Operand : {@link ASTNode};
 
  */
-public abstract class StatementNode extends ASTNode<ASTNode> implements Cloneable {
-  /**
-   * @aspect accept
-   * @declaredat ASTAccept.jadd:14
-   */
-  Object accept(ASTVisitor v) {
-        return v.visit(this);
-    }
+public abstract class Operand extends ASTNode<ASTNode> implements Cloneable {
   /**
    * @declaredat ASTNode:1
    */
-  public StatementNode() {
+  public Operand() {
     super();
   }
   /**
@@ -50,8 +43,8 @@ public abstract class StatementNode extends ASTNode<ASTNode> implements Cloneabl
   /** @apilevel internal 
    * @declaredat ASTNode:25
    */
-  public StatementNode clone() throws CloneNotSupportedException {
-    StatementNode node = (StatementNode) super.clone();
+  public Operand clone() throws CloneNotSupportedException {
+    Operand node = (Operand) super.clone();
     return node;
   }
   /**
@@ -63,7 +56,7 @@ public abstract class StatementNode extends ASTNode<ASTNode> implements Cloneabl
    * @declaredat ASTNode:36
    */
   @Deprecated
-  public abstract StatementNode fullCopy();
+  public abstract Operand fullCopy();
   /**
    * Create a deep copy of the AST subtree at this node.
    * The copy is dangling, i.e. has no parent.
@@ -71,7 +64,7 @@ public abstract class StatementNode extends ASTNode<ASTNode> implements Cloneabl
    * @apilevel low-level
    * @declaredat ASTNode:44
    */
-  public abstract StatementNode treeCopyNoTransform();
+  public abstract Operand treeCopyNoTransform();
   /**
    * Create a deep copy of the AST subtree at this node.
    * The subtree of this node is traversed to trigger rewrites before copy.
@@ -80,5 +73,5 @@ public abstract class StatementNode extends ASTNode<ASTNode> implements Cloneabl
    * @apilevel low-level
    * @declaredat ASTNode:52
    */
-  public abstract StatementNode treeCopy();
+  public abstract Operand treeCopy();
 }

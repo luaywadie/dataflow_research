@@ -1,23 +1,16 @@
 /* This file was generated with JastAdd2 (http://jastadd.org) version 2.3.3 */
 /**
  * @ast node
- * @declaredat Arithmetic.ast:44
- * @astdecl AssignmentNode : StatementNode ::= <ID:String> ArithmeticExpressionNode;
- * @production AssignmentNode : {@link StatementNode} ::= <span class="component">&lt;ID:{@link String}&gt;</span> <span class="component">{@link ArithmeticExpressionNode}</span>;
+ * @declaredat Arithmetic.ast:50
+ * @astdecl idOp : Operand ::= <ID:String>;
+ * @production idOp : {@link Operand} ::= <span class="component">&lt;ID:{@link String}&gt;</span>;
 
  */
-public class AssignmentNode extends StatementNode implements Cloneable {
-  /**
-   * @aspect accept
-   * @declaredat ASTAccept.jadd:18
-   */
-  Object accept(ASTVisitor v) {
-        return v.visit(this);
-    }
+public class idOp extends Operand implements Cloneable {
   /**
    * @declaredat ASTNode:1
    */
-  public AssignmentNode() {
+  public idOp() {
     super();
   }
   /**
@@ -28,51 +21,49 @@ public class AssignmentNode extends StatementNode implements Cloneable {
    * @declaredat ASTNode:10
    */
   public void init$Children() {
-    children = new ASTNode[1];
   }
   /**
-   * @declaredat ASTNode:13
+   * @declaredat ASTNode:12
    */
   @ASTNodeAnnotation.Constructor(
-    name = {"ID", "ArithmeticExpressionNode"},
-    type = {"String", "ArithmeticExpressionNode"},
-    kind = {"Token", "Child"}
+    name = {"ID"},
+    type = {"String"},
+    kind = {"Token"}
   )
-  public AssignmentNode(String p0, ArithmeticExpressionNode p1) {
+  public idOp(String p0) {
     setID(p0);
-    setChild(p1, 0);
   }
   /** @apilevel low-level 
-   * @declaredat ASTNode:23
+   * @declaredat ASTNode:21
    */
   protected int numChildren() {
-    return 1;
+    return 0;
   }
   /** @apilevel internal 
-   * @declaredat ASTNode:27
+   * @declaredat ASTNode:25
    */
   public void flushAttrCache() {
     super.flushAttrCache();
   }
   /** @apilevel internal 
-   * @declaredat ASTNode:31
+   * @declaredat ASTNode:29
    */
   public void flushCollectionCache() {
     super.flushCollectionCache();
   }
   /** @apilevel internal 
-   * @declaredat ASTNode:35
+   * @declaredat ASTNode:33
    */
-  public AssignmentNode clone() throws CloneNotSupportedException {
-    AssignmentNode node = (AssignmentNode) super.clone();
+  public idOp clone() throws CloneNotSupportedException {
+    idOp node = (idOp) super.clone();
     return node;
   }
   /** @apilevel internal 
-   * @declaredat ASTNode:40
+   * @declaredat ASTNode:38
    */
-  public AssignmentNode copy() {
+  public idOp copy() {
     try {
-      AssignmentNode node = (AssignmentNode) clone();
+      idOp node = (idOp) clone();
       node.parent = null;
       if (children != null) {
         node.children = (ASTNode[]) children.clone();
@@ -88,10 +79,10 @@ public class AssignmentNode extends StatementNode implements Cloneable {
    * @return dangling copy of the subtree at this node
    * @apilevel low-level
    * @deprecated Please use treeCopy or treeCopyNoTransform instead
-   * @declaredat ASTNode:59
+   * @declaredat ASTNode:57
    */
   @Deprecated
-  public AssignmentNode fullCopy() {
+  public idOp fullCopy() {
     return treeCopyNoTransform();
   }
   /**
@@ -99,10 +90,10 @@ public class AssignmentNode extends StatementNode implements Cloneable {
    * The copy is dangling, i.e. has no parent.
    * @return dangling copy of the subtree at this node
    * @apilevel low-level
-   * @declaredat ASTNode:69
+   * @declaredat ASTNode:67
    */
-  public AssignmentNode treeCopyNoTransform() {
-    AssignmentNode tree = (AssignmentNode) copy();
+  public idOp treeCopyNoTransform() {
+    idOp tree = (idOp) copy();
     if (children != null) {
       for (int i = 0; i < children.length; ++i) {
         ASTNode child = (ASTNode) children[i];
@@ -120,10 +111,10 @@ public class AssignmentNode extends StatementNode implements Cloneable {
    * The copy is dangling, i.e. has no parent.
    * @return dangling copy of the subtree at this node
    * @apilevel low-level
-   * @declaredat ASTNode:89
+   * @declaredat ASTNode:87
    */
-  public AssignmentNode treeCopy() {
-    AssignmentNode tree = (AssignmentNode) copy();
+  public idOp treeCopy() {
+    idOp tree = (idOp) copy();
     if (children != null) {
       for (int i = 0; i < children.length; ++i) {
         ASTNode child = (ASTNode) getChild(i);
@@ -154,31 +145,5 @@ public class AssignmentNode extends StatementNode implements Cloneable {
   @ASTNodeAnnotation.Token(name="ID")
   public String getID() {
     return tokenString_ID != null ? tokenString_ID : "";
-  }
-  /**
-   * Replaces the ArithmeticExpressionNode child.
-   * @param node The new node to replace the ArithmeticExpressionNode child.
-   * @apilevel high-level
-   */
-  public void setArithmeticExpressionNode(ArithmeticExpressionNode node) {
-    setChild(node, 0);
-  }
-  /**
-   * Retrieves the ArithmeticExpressionNode child.
-   * @return The current node used as the ArithmeticExpressionNode child.
-   * @apilevel high-level
-   */
-  @ASTNodeAnnotation.Child(name="ArithmeticExpressionNode")
-  public ArithmeticExpressionNode getArithmeticExpressionNode() {
-    return (ArithmeticExpressionNode) getChild(0);
-  }
-  /**
-   * Retrieves the ArithmeticExpressionNode child.
-   * <p><em>This method does not invoke AST transformations.</em></p>
-   * @return The current node used as the ArithmeticExpressionNode child.
-   * @apilevel low-level
-   */
-  public ArithmeticExpressionNode getArithmeticExpressionNodeNoTransform() {
-    return (ArithmeticExpressionNode) getChildNoTransform(0);
   }
 }

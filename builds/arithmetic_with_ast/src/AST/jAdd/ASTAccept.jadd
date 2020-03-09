@@ -8,18 +8,18 @@
  */
 
 aspect accept {
-    Object RootNode.accept(AstVisitor v) {
+    Object RootNode.accept(ASTVisitor v) {
         return v.visit(this);
     }
-    Object StatementNode.accept(AstVisitor v) {
-        return v.visit(this);
-    }
-
-    Object AssignmentNode.accept(AstVisitor v) {
+    Object StatementNode.accept(ASTVisitor v) {
         return v.visit(this);
     }
 
-    Object ArithmeticExpressionNode.accept(AstVisitor v) {
+    Object AssignmentNode.accept(ASTVisitor v) {
+        return v.visit(this);
+    }
+
+    Object ArithmeticExpressionNode.accept(ASTVisitor v) {
         return v.visit(this);
     }
 }
