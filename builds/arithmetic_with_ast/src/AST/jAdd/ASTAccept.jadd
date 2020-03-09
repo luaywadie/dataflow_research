@@ -1,3 +1,12 @@
+/**
+ * @link http://jastadd.org/web/documentation/reference-manual.php#Aspects
+ * The accept aspect adds the accept method to all AST node classes.
+ * Note that this behavior could be added to either a .jadd or .jrag file, though
+ * there are conventions about what types of things to through which file type. More
+ * about this convention can be seen here:
+ *      @link http://jastadd.org/web/documentation/reference-manual.php#jadd
+ */
+
 aspect accept {
     Object RootNode.accept(AstVisitor v) {
         return v.visit(this);

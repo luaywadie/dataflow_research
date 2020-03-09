@@ -1,6 +1,16 @@
 import java.util.HashMap;
 
-public class AstEvaluationVisitor implements AstVisitor<Integer> {
+/*
+TODO: This is the wrong way to implement the visitor pattern, so it needs to be fixed
+ */
+
+/**
+ * Evaluates the arithmetic expressions that a "program" may be made up of. Note that it implements the
+ * ASTVisitor interface, which requires us to define what evaluation looks like for each type of node that
+ * we may find in an AST.
+ */
+
+public class ASTEvaluationVisitor implements ASTVisitor<Integer> {
     static HashMap<String, Integer> varTable = new HashMap<>();
     private static int indentLevel = 1;
 
@@ -11,15 +21,6 @@ public class AstEvaluationVisitor implements AstVisitor<Integer> {
         }
         return null;
     }
-
-//    public Integer visit(StatementNode node) {
-//        if (node instanceof AssignmentNode) {
-//            return visit((AssignmentNode) node);
-//        } else if (node instanceof ArithmeticExpressionNode) {
-//            return visit((ArithmeticExpressionNode) node);
-//        }
-//        return null;
-//    }
 
     public Integer visit(StatementNode node) {
         if (node instanceof AssignmentNode) {
