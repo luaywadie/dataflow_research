@@ -1,9 +1,5 @@
 import java.util.HashMap;
 
-/*
-TODO: This is the wrong way to implement the visitor pattern, so it needs to be fixed
- */
-
 /**
  * Evaluates the arithmetic expressions that a "program" may be made up of. Note that it implements the
  * ASTVisitor interface, which requires us to define what evaluation looks like for each type of node that
@@ -12,21 +8,12 @@ TODO: This is the wrong way to implement the visitor pattern, so it needs to be 
 
 public class ASTEvaluationVisitor implements ASTVisitor<Integer> {
     static HashMap<String, Integer> varTable = new HashMap<>();
-    private static int indentLevel = 1;
+    private static int indentLevel = 1;  // for pretty printing
 
     public Integer visit(RootNode node) {
         System.out.println("--Begin Evaluation at Root--");
         for (int i = 0; i < node.getNumStatementNode(); i++) {
             node.getStatementNode(i).accept(this);
-        }
-        return null;
-    }
-
-    public Integer visit(StatementNode node) {
-        if (node instanceof AssignmentNode) {
-            return (Integer) ((AssignmentNode)node).accept(this);
-        } else if (node instanceof ArithmeticExpressionNode) {
-            return visit((ArithmeticExpressionNode) node);
         }
         return null;
     }
@@ -46,6 +33,15 @@ public class ASTEvaluationVisitor implements ASTVisitor<Integer> {
         return null;
     }
 
+
+    /*
+        TODO: This relies heavily on instanceof, which I have read to be bad practice. So I am not
+        totally sure what else to do.f
+        I considered adding idOp and intOp versions of visit to the vistor interface, and changing
+        the type parameter of this class to <Object> rather than <Integer> (due to the fact that all nodes
+        EXCEPT for idOp (which returns a String) return Integers). All that really does is push the need for
+        instanceof elsewhere. So it would be good to figure out a way to do this without needing instanceof.
+     */
     public Integer visit(ArithmeticExpressionNode node) {
         Integer lOpValue = null;
         Integer rOpValue = null;

@@ -12,7 +12,8 @@
  */
 interface ASTVisitor<T> {
     T visit(RootNode node);
+
     T visit(AssignmentNode node);
+
     T visit(ArithmeticExpressionNode node);
-    T visit(StatementNode node);
 }
