@@ -16,4 +16,7 @@ interface ASTVisitor<T> {
     T visit(AssignmentNode node);
 
     T visit(ArithmeticExpressionNode node);
+
+    // this isn't actually used anywhere (is an abstract node type), but can't compile without it
+    T visit(StatementNode node);
 }

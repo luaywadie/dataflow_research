@@ -27,17 +27,26 @@ public class ASTBuilderVisitor extends ArithmeticBaseVisitor<ASTNode> {
         return rootNode;
     }
 
-    /* here no nodes will be constructed directly, but nodes will be constructed indirectly
+    /*
+       here no nodes will be constructed directly, but nodes will be constructed indirectly
        by the calls to visitAssignment or visitArithmeticExpression
      */
     @Override
     public StatementNode visitStatement(ArithmeticParser.StatementContext ctx) {
         System.out.println("Visiting Statement");
+        /*
+            TODO: Seems like there should be a better way to go about finding out what type of
+            statement we have.
+            POSSIBILITY: Name the alternatives of the StatementNode so that each has its own
+            type and therefore its own visit method
+         */
         // decide whether node is assignment or arithmeticExpression and visit according to this
         if (ctx.assignment() != null) { // visit an assignment
-            return visitAssignment(ctx.assignment());
+            //return visitAssignment(ctx.assignment());
+            return ctx.assignment.accept(this);
         } else if (ctx.arithmeticExpression() != null)  { // visit an arithmeticExpression
-            return visitArithmeticExpression(ctx.arithmeticExpression());
+//          return visitArithmeticExpression(ctx.arithmeticExpression());
+            ctx.arithmeticExpression().accept(this);
         } else {
             throw new RuntimeException("Something has gone wrong");
         }
@@ -47,7 +56,8 @@ public class ASTBuilderVisitor extends ArithmeticBaseVisitor<ASTNode> {
     public StatementNode visitAssignment(ArithmeticParser.AssignmentContext ctx) {
         System.out.println("Visiting Assignment");
         String id = ctx.ID().getText();
-        ArithmeticExpressionNode arithmeticExpression = (ArithmeticExpressionNode) visitArithmeticExpression(ctx.arithmeticExpression());
+//      ArithmeticExpressionNode arithmeticExpression = (ArithmeticExpressionNode) visitArithmeticExpression(ctx.arithmeticExpression());
+        ArithmeticExpressionNode arithmeticExpression = ctx.arithmeticExpression().accept(this);
         return new AssignmentNode(id, arithmeticExpression);
     }
 
