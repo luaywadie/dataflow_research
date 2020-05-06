@@ -34,7 +34,7 @@ public class Model_Simple {
       // Generate the clustors given the Instances(data)
      kmeans_instance.buildClusterer(retrievedData);
       // For each cluster, store its assigned instances into assignments
-      int[] assignments =kmeans_instance.getAssignments();
+      int[] assignments = kmeans_instance.getAssignments();
       // Loop over every assignment in assignments and print the cluster and instance prediction
       int i = 0;
       for (int clusterNum : assignments) {
@@ -42,7 +42,7 @@ public class Model_Simple {
         i++;
       }
       // Get each clusters center point and its classified attributes
-      Instances centers =kmeans_instance.getClusterCentroids();
+      Instances centers = kmeans_instance.getClusterCentroids();
       for (i = 0; i < numOfClusters; i++) {
           System.out.print("Cluster #: " + i + " \t| Count: " +kmeans_instance.getClusterSizes()[i]);
           System.out.println(" \t| Center: " + centers.instance(i));
