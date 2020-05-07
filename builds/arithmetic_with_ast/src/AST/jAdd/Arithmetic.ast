@@ -46,5 +46,5 @@ AssignmentNode: StatementNode ::= <ID> ArithmeticExpressionNode; // One child is
 ArithmeticExpressionNode: StatementNode ::= lOp:Operand <OPERATOR> rOp:Operand;  // naming of the two Operand
                                                                                  // children is required
 abstract Operand; // just a parent class terminal nodes
-intOp: Operand ::= <INT:int>; // is a string because
+intOp: Operand ::= <INT:int>;
 idOp: Operand ::= <ID>;
