@@ -30,6 +30,7 @@ public class Model_Simple {
     String[] options = new String[1];
     options[0] = "-H";
     loader.setOptions(options);
+    loader.setNoHeaderRowPresent(false);
 
     Instances data = loader.getDataSet();
 
@@ -41,17 +42,17 @@ public class Model_Simple {
       // Keep the order of Instances relative to their read-in state
      kmeans_instance.setPreserveInstancesOrder(true);
       // Number of clusters to generate, we want 2 since our Y-classifer can either be a yes / no
-     kmeans_instance.setNumClusters(10);
+     kmeans_instance.setNumClusters(3);
       // Generate the clustors given the Instances(data)
      kmeans_instance.buildClusterer(data);
       // For each cluster, store its assigned instances into assignments
       int[] assignments = kmeans_instance.getAssignments();
       // Loop over every assignment in assignments and print the cluster and instance prediction
       int i = 0;
-      for (int clusterNum : assignments) {
-        System.out.printf("Instance %d => Cluster %d\n",i,clusterNum);
-        i++;
-      }
+      // for (int clusterNum : assignments) {
+      //   System.out.printf("Instance %d => Cluster %d\n",i,clusterNum);
+      //   i++;
+      // }
       // Get each clusters center point and its classified attributes
       Instances centers = kmeans_instance.getClusterCentroids();
       // for (i = 0; i < 10; i++) {
@@ -59,7 +60,9 @@ public class Model_Simple {
       //     System.out.println(" \t| Center: " + centers.instance(i));
       // }
       Instances obj = kmeans_instance.getClusterCentroids();
-      System.out.println("test");
+      System.out.println("Centroid 1: " + obj.instance(0));
+      System.out.println("Centroid 2: " + obj.instance(1));
+      System.out.println("Centroid 3: " + obj.instance(2));
     } catch (Exception e) {
       // N/A
     }
