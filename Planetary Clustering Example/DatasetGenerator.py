@@ -9,9 +9,9 @@ NUM_SAMPLES = 500  # how many samples should be generated
 
 df = pd.DataFrame(columns=feature_names)
 # make boolean variables boolean
-df['has_water'] = df['has_water'].astype('boolean')
-df['orbits_star'] = df['orbits_star'].astype('boolean')
-df['orbits_planet'] = df['orbits_planet'].astype('boolean')
+df['has_water'] = df['has_water'].astype(bool)
+df['orbits_star'] = df['orbits_star'].astype(bool)
+df['orbits_planet'] = df['orbits_planet'].astype(bool)
 
 
 # returns a normalized list of floats to add up to 1.0 for composition percentages
@@ -35,7 +35,7 @@ for i in range(NUM_SAMPLES):
     orbits_planet = bool(np.random.choice([0, 1]))
     pctg_oxygen, pctg_helium, pctg_iron, pctg_nickel, pctg_silicon, pctg_aluminum, pctg_calcium,\
         pctg_sodium, pctg_potassium, pctg_magnesium, pctg_other = get_composition_pctgs()
-    data.append([mass, diameter, surface_temperature, has_water, orbits_star, orbits_planet,\
+    data.append([mass, diameter, has_water, orbits_star, orbits_planet, surface_temperature,\
                     pctg_oxygen, pctg_helium, pctg_iron, pctg_nickel, pctg_silicon, pctg_aluminum, pctg_calcium,\
                     pctg_sodium, pctg_potassium, pctg_magnesium, pctg_other])
 
