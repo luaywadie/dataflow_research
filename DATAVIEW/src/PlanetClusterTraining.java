@@ -6,7 +6,7 @@ import weka.clusterers.SimpleKMeans;
 import weka.core.Instances;
 
 public class PlanetClusterTraining extends Task {
-  
+
   public PlanetClusterTraining() {
     super("PlanetClusterTraining",
     "This task will execute SimpleKMeans from Weka onto our data");
