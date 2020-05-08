@@ -9,25 +9,25 @@ public class PlanetaryClustering extends Workflow {
     public final String CLUSTERING_OUTPUT = "planetary_data_output.csv";
 
     // the number of clusters for the model to have
-    public final int K = 5;
+    public static final int numClusters = 5;
     // the number of individual tasks used to classify new training data
-    public final int M = 3;
+    public static final int numClusteringTasks = 3;
 
     PlanetaryClustering() {
-        super("Planetary Clustering", "Performs K-Means clustering on planet data");
-        wins = new InputPort[2];
-        wins[0] = new InputPort("Training data", Port.DATAVIEW_Table, "The training data");
-        wins[1] = new InputPort("Test data", Port.DATAVIEW_Table, "The test data");
+        super("Planetary Clustering", "Performs numClusters-Means clustering on planet data");
+        wins = new DATAVIEW_BigFile[2];
+        wins[0] = new DATAVIEW_BigFile(TRAIN_INPUT);
+        wins[1] = new DATAVIEW_BigFile(TEST_INPUT);
 
-        wouts = new OutputPort[1];
-        wouts[0] = new OutputPort("Test Results", Port.DATAVIEW_Table, "The resulting cluster");
+        wouts = new DATAVIEW_BigFile[1];
+        wouts[0] = new DATAVIEW_BigFile(CLUSTERING_OUTPUT);
     }
 
     public void design() {
         // create tasks
         Task planetClusterTrainingTask = addTask("PlanetClusterTraining");
         Task testDataPartitionerTask = addTask("TestDataPartitioner");
-        Task[] runClusteringTasks = addTasks("RunClustering", M);
+        Task[] runClusteringTasks = addTasks("RunClustering", numClusteringTasks);
         Task clusteringResultWriterTask = addTask("ClusteringResultWriter");
 
         // input the training and test data to the workflow
@@ -40,12 +40,12 @@ public class PlanetaryClustering extends Workflow {
         }
 
         // input from the test data partitioner InputPort 1 of the respective task to run clustering for that partition
-        for (int partition = 0; partition < M; partition++) {
+        for (int partition = 0; partition < numClusteringTasks; partition++) {
             addEdge(testDataPartitionerTask, partition, runClusteringTasks[partition], 1);
         }
 
         // combine the results of distributed clustering of the test data
-        for (int partition = 0; partition < M; partition++) {
+        for (int partition = 0; partition < numClusteringTasks; partition++) {
             addEdge(runClusteringTasks[partition], 0, clusteringResultWriterTask, partition);
         }
 
