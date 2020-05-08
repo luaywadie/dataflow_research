@@ -11,7 +11,7 @@ public class PlanetCluster extends Workflow {
         // tasks
         Task trainTestSplit = addTask("TrainTestSplit");
         Task[] addHeaders = addTasks("AddHeader", 2);
-        Task performClustering =
+        //Task performClustering =
 
         // edges
     }
