@@ -1081,3 +1081,7 @@ DATAVIEW/WebContent/workflowTaskDir/WordCountAggregation.class
 
 # DATAVIEW Settings Ignore
 DATAVIEW/.settings
+K_Means/.idea/encodings.xml
+K_Means/.idea/modules.xml
+K_Means/.idea/vcs.xml
+K_Means/.idea/workspace.xml
