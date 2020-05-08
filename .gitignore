@@ -7,6 +7,7 @@ builds/arithmetic_with_ast/.idea/encodings.xml
 builds/arithmetic_with_ast/.idea/dictionaries/Blake.xml
 .DS_Store
 *.class
+.idea
 
 # DATAVIEW Src Ignores
 DATAVIEW/src/Algorithm1.java
@@ -1114,3 +1115,8 @@ DATAVIEW/.idea/codeStyles/codeStyleConfig.xml
 DATAVIEW/.classpath
 DATAVIEW/.idea/inspectionProfiles/Project_Default.xml
 DATAVIEW/.idea/vcs.xml
+.project
+.classpath
+DATAVIEW/src/res/planetary_data_train.csv
+DATAVIEW/src/PlanetClusterTest.java
+bin/res/planetary_data_train.csv

@@ -2,6 +2,8 @@ import dataview.models.InputPort;
 import dataview.models.OutputPort;
 import dataview.models.Port;
 import dataview.models.Task;
+import dataview.models.Dataview;
+
 import weka.clusterers.SimpleKMeans;
 import weka.core.Instances;
 
@@ -20,6 +22,6 @@ public class PlanetClusterTraining extends Task {
 
   @Override
   public void run() {
-
+	  Dataview.debugger.logErrorMessage("Error");
   }
 }

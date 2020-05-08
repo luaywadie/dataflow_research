@@ -33,7 +33,7 @@ public class PlanetaryClustering extends Workflow {
         // input the training and test data to the workflow
         addEdge(0, planetClusterTrainingTask);
         addEdge(1, testDataPartitionerTask);
-
+        
         // send cluster centroids to each task that runs clustering on the test data
         for (int i = 0; i < runClusteringTasks.length; i++) {
             addEdge(planetClusterTrainingTask, runClusteringTasks[i]);
