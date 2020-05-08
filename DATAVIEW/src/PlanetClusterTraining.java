@@ -6,6 +6,7 @@ import weka.clusterers.SimpleKMeans;
 import weka.core.Instances;
 
 public class PlanetClusterTraining extends Task {
+  
   public PlanetClusterTraining() {
     super("PlanetClusterTraining",
     "This task will execute SimpleKMeans from Weka onto our data");
@@ -13,7 +14,12 @@ public class PlanetClusterTraining extends Task {
     ins = new InputPort[1];
     outs = new OutputPort[1];
     // Assign ports
-    ins[0] = new InputPort("data", Port.DATAVIEW_String, "This is our data input");
-    outs[0] = new OutputPort("centroids", Port.DATAVIEW_String, "This is the return value from SimpleKMeans Clustering");
+    ins[0] = new InputPort("data", Port.DATAVIEW_Table, "This is our data input");
+    outs[0] = new OutputPort("centroids", Port.DATAVIEW_Table, "This is the return value from SimpleKMeans Clustering");
+  }
+
+  @Override
+  public void run() {
+
   }
 }
