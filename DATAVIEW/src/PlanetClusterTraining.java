@@ -5,6 +5,10 @@ import dataview.models.Task;
 
 import weka.clusterers.SimpleKMeans;
 import weka.core.Instances;
+import weka.core.converters.ConverterUtils.DataSource;
+import weka.core.converters.CSVLoader;
+
+import java.io.File;
 
 public class PlanetClusterTraining extends Task {
 
@@ -15,12 +19,45 @@ public class PlanetClusterTraining extends Task {
     ins = new InputPort[1];
     outs = new OutputPort[1];
     // Assign ports
-    ins[0] = new InputPort("data", Port.DATAVIEW_Table, "This is our data input");
-    outs[0] = new OutputPort("centroids", Port.DATAVIEW_Table, "This is the return value from SimpleKMeans Clustering");
+    ins[0] = new InputPort("data", Port.DATAVIEW_String, "This is our data input");
+    outs[0] = new OutputPort("centroids", Port.DATAVIEW_String, "This is the return value from SimpleKMeans Clustering");
   }
 
   @Override
   public void run() {
-	  
+	// Variables
+	int numClusters = PlanetaryClustering.numClusters;
+	
+	// Instantiate CSV Input
+	CSVLoader loader = new CSVLoader();
+	
+	try {
+		// Load the source via input location (File Directory Path)
+		loader.setSource(new File((String)ins[0].location));
+		// Set headers to null for processing
+		loader.setNoHeaderRowPresent(false);
+		// Get instances from the data (Instances are data entry, 1 Instance = 1 Data Entry)
+		Instances data = loader.getDataSet();
+		// Instantiate SimpleKMeans
+		SimpleKMeans kmeans = new SimpleKMeans();
+		// Set random seed to static (Choose any #)
+		kmeans.setSeed(42);
+		// Keep data entry orders unchanged
+		kmeans.setPreserveInstancesOrder(true);
+		// Set number of clusters
+		// TODO Automate best # of clusters to use per data set
+		kmeans.setNumClusters(numClusters);
+		// Construct the clusters
+		kmeans.buildClusterer(data);
+		// Get centroids from clusterer
+		Instances centroids = kmeans.getClusterCentroids();
+		
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	
+	
   }
 }
+	
