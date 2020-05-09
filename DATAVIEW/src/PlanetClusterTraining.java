@@ -5,7 +5,6 @@ import dataview.models.Task;
 
 import weka.clusterers.SimpleKMeans;
 import weka.core.Instances;
-import weka.core.converters.ConverterUtils.DataSource;
 import weka.core.converters.CSVLoader;
 
 import java.io.File;
@@ -51,13 +50,18 @@ public class PlanetClusterTraining extends Task {
 		kmeans.buildClusterer(data);
 		// Get centroids from clusterer
 		Instances centroids = kmeans.getClusterCentroids();
-		
-		
+		// Create StringBuilder
+		StringBuilder sb = new StringBuilder();
+		// Loop over all centroids and append them into StringBuilder
+		int i;
+		for (i = 0; i < numClusters; i++) {
+			sb.append(centroids.get(i) + "\n");
+		}
+		// Set output port to StringBuilder
+		outs[0].write(sb.toString());
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
-	
-	
   }
 }
 	
