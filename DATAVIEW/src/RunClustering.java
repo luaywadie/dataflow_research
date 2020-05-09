@@ -1,5 +1,9 @@
 import dataview.models.*;
 import weka.clusterers.SimpleKMeans;
+import weka.core.Instances;
+
+import java.io.*;
+import java.nio.charset.Charset;
 
 public class RunClustering extends Task {
     public RunClustering() {
@@ -19,7 +23,7 @@ public class RunClustering extends Task {
     public void run() {
         // read in the centroids
         DATAVIEW_Table rawCentroids = (DATAVIEW_Table) ins[0].read();
-        StringBuilder centroids = new StringBuilder(); // in ARFF format
+        StringBuilder sb = new StringBuilder(); // in ARFF format
         // header for ARFF format
         centroids.append("@relation dataset\n" +
                 "@attribute mass numeric\n" +
@@ -37,7 +41,15 @@ public class RunClustering extends Task {
                 "@attribute pctg_magnesium numeric\n" +
                 "@attribute pctg_other numeric\n" +
                 "@data\n");
-        centroids.append(rawCentroids.toString());
+        sb.append(rawCentroids.toString());
+        InputStream inputStream = ByteArrayInputStream(rawCentroids.toString().getBytes(Charset.forName("UTF-8"));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        Instances centroids = null;
+        try {
+            centroids = new Instances(bufferedReader);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         SimpleKMeans model = new SimpleKMeans();
         try {
