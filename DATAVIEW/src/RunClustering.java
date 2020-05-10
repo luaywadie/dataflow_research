@@ -64,26 +64,6 @@ public class RunClustering extends Task {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        StringBuilder sb = new StringBuilder(); // in ARFF format
-//        // header for ARFF format
-//        centroids.append("@relation dataset\n" +
-//                "@attribute mass numeric\n" +
-//                "@attribute diameter numeric\n" +
-//                "@attribute surface_temperature numeric\n" +
-//                "@attribute pctg_oxygen numeric\n" +
-//                "@attribute pctg_helium numeric\n" +
-//                "@attribute pctg_iron numeric\n" +
-//                "@attribute pctg_nickel numeric\n" +
-//                "@attribute pctg_silicon numeric\n" +
-//                "@attribute pctg_aluminum numeric\n" +
-//                "@attribute pctg_calcium numeric\n" +
-//                "@attribute pctg_sodium numeric\n" +
-//                "@attribute pctg_potassium numeric\n" +
-//                "@attribute pctg_magnesium numeric\n" +
-//                "@attribute pctg_other numeric\n" +
-//                "@data\n");
-//        sb.append(rawCentroids.toString());
-
         /*
         Because we can not actually pass the model between the tasks, we must rebuild the model. By passing only the centroids
         (which we already got from the PlanetClusterTraining task), we ultimately are able to quickly reconstruct our model.
@@ -100,7 +80,7 @@ public class RunClustering extends Task {
 
         int currentId = startId;
         StringBuilder clusterResults = new StringBuilder();
-        for (Instance dataPoint: idTrimmedTestData) {
+        for (Instance dataPoint: testData) {
             StringBuilder rowResult = new StringBuilder();
             rowResult.append(currentId + ",");
             int clusterNo = -1;
@@ -126,6 +106,5 @@ public class RunClustering extends Task {
 
         // writing the result
         outs[0].write(clusterResults);
-
     }
 }

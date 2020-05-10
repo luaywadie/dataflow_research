@@ -31,7 +31,7 @@ for i in range(NUM_TRAIN_SAMPLES):
 
 # write the training data to a CSV file
 train_df = pd.DataFrame(train_data, columns=feature_names)
-train_df.to_csv('planetary_data_train.csv', index=False)
+train_df.to_csv('../WebContent/workflowTaskDir/planetary_data_train.csv', index=False)
 
 test_data = []
 for i in range(NUM_TEST_SAMPLES):
@@ -46,4 +46,4 @@ for i in range(NUM_TEST_SAMPLES):
 
 # write the training data to a CSV file
 test_df = pd.DataFrame(test_data, columns=["id"] + feature_names)
-test_df.to_csv('planetary_data_test.csv', index=False)
+test_df.to_csv('../WebContent/workflowTaskDir/planetary_data_test.csv', index=False)
