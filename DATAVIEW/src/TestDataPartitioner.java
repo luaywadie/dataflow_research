@@ -22,7 +22,7 @@ public class TestDataPartitioner extends Task {
         int numFeatures = data.getNumOfColumns();
 
         System.out.println("TestDataPartitioner: reading in data set with "+
-                (numSamples - 1) + " samples and " + numFeatures + " features");  // -1 for header row
+                numSamples + " samples and " + numFeatures + " features");  // -1 for header row
 
 
         // TODO TEST: try having the number of clustering tasks gt, eq, lt number of samples

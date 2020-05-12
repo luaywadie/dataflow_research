@@ -25,7 +25,7 @@ public class ClusteringResultWriter extends Task {
 	public void run() {
     	// Variables
 		int i;
-		
+
 		// Instantiate StringBuilder 
 		StringBuilder sb = new StringBuilder();
     	
@@ -36,7 +36,7 @@ public class ClusteringResultWriter extends Task {
 		
 		// Append the data read in from different partitions
 		for (i = 0; i < numClusteringTasks; i++) {
-			sb.append((String)ins[i].read() + "\n");
+			sb.append(ins[i].read());
 		}
 		
 		// Output the CSV formatted predicted results
