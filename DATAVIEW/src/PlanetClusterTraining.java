@@ -57,10 +57,10 @@ public class PlanetClusterTraining extends Task {
 		for (i = 0; i < numClusters; i++) {
 			sb.append(centroids.get(i) + "\n");
 		}
-		System.out.println(centroids.get(0));
 
 		// Set output port to StringBuilder
-		outs[0].write(sb.toString());
+		outs[0].write(sb.toString().replace(',', ':'));  // ':' is used by DATAVIEW_Table
+
 	} catch (Exception e) {
 		e.printStackTrace();
 	}

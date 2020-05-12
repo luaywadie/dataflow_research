@@ -22,9 +22,27 @@ public class RunClustering extends Task {
     }
 
     public void run() {
-        // centroids
+        StringBuilder centroidsStr = new StringBuilder();
+        centroidsStr.append("@relation centroidsStr\n" +
+                "@attribute mass numeric\n" +
+                "@attribute diameter numeric\n" +
+                "@attribute surface_temperature numeric\n" +
+                "@attribute pctg_oxygen numeric\n" +
+                "@attribute pctg_helium numeric\n" +
+                "@attribute pctg_iron numeric\n" +
+                "@attribute pctg_nickel numeric\n" +
+                "@attribute pctg_silicon numeric\n" +
+                "@attribute pctg_aluminum numeric\n" +
+                "@attribute pctg_calcium numeric\n" +
+                "@attribute pctg_sodium numeric\n" +
+                "@attribute pctg_potassium numeric\n" +
+                "@attribute pctg_magnesium numeric\n" +
+                "@attribute pctg_oither numeric\n" +
+                "@data\n"
+                );
         DATAVIEW_Table rawCentroids = (DATAVIEW_Table) ins[0].read();
-        InputStream centroidInputStream = new ByteArrayInputStream(rawCentroids.toString().getBytes(Charset.forName("UTF-8")));
+        centroidsStr.append(rawCentroids.toString().replace(':', ','));
+        InputStream centroidInputStream = new ByteArrayInputStream(centroidsStr.toString().getBytes(Charset.forName("UTF-8")));
         BufferedReader centroidBufferedReader = new BufferedReader(new InputStreamReader(centroidInputStream));
         Instances centroids = null;
         try {
@@ -32,8 +50,17 @@ public class RunClustering extends Task {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        SimpleKMeans clusterer = new SimpleKMeans();
+        try {
+            clusterer.setPreserveInstancesOrder(true);
+            clusterer.setNumClusters(PlanetaryClustering.numClusters);
+            clusterer.buildClusterer(centroids);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        // test data (to perfrom clustering on)
+
+        // test data (to perform clustering on)
         DATAVIEW_Table rawTestData = (DATAVIEW_Table) ins[1].read();
         // get the start and end ID labels (for writing to output)
         int startId = Integer.parseInt(rawTestData.get(1, 0));

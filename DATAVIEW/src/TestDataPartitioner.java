@@ -21,8 +21,9 @@ public class TestDataPartitioner extends Task {
         int numSamples = data.getNumOfRows();
         int numFeatures = data.getNumOfColumns();
 
-//        System.out.println("TestDataPartitioner: reading in data set with "+
-//                numSamples + " samples and " + numFeatures + " features");
+        System.out.println("TestDataPartitioner: reading in data set with "+
+                numSamples + " samples and " + numFeatures + " features");
+
 
         // TODO TEST: try having the number of clustering tasks gt, eq, lt number of samples
         if (PlanetaryClustering.numClusteringTasks > numSamples) {
