@@ -31,7 +31,7 @@ for i in range(NUM_TRAIN_SAMPLES):
 
 # write the training data to a CSV file
 train_df = pd.DataFrame(train_data, columns=feature_names)
-train_df.to_csv('../WebContent/workflowTaskDir/planetary_data_train.csv', index=False)
+train_df.to_csv('../WebContent/workflowTaskDir/planetary_data_train.csv', index=False, sep=':')
 
 test_data = []
 for i in range(NUM_TEST_SAMPLES):
@@ -44,6 +44,6 @@ for i in range(NUM_TEST_SAMPLES):
     test_data.append([id, mass, diameter, surface_temperature,pctg_oxygen, pctg_helium, pctg_iron, pctg_nickel, pctg_silicon,\
                  pctg_aluminum, pctg_calcium, pctg_sodium, pctg_potassium, pctg_magnesium, pctg_other])
 
-# write the training data to a CSV file
+# write the test data to a CSV file
 test_df = pd.DataFrame(test_data, columns=["id"] + feature_names)
-test_df.to_csv('../WebContent/workflowTaskDir/planetary_data_test.csv', index=False)
+test_df.to_csv('../WebContent/workflowTaskDir/planetary_data_test.csv', index=False, sep=':', header=False)

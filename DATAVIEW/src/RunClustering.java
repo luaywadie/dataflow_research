@@ -50,27 +50,36 @@ public class RunClustering extends Task {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        SimpleKMeans clusterer = new SimpleKMeans();
-        try {
-            clusterer.setPreserveInstancesOrder(true);
-            clusterer.setNumClusters(PlanetaryClustering.numClusters);
-            clusterer.buildClusterer(centroids);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
 
         // test data (to perform clustering on)
+        StringBuilder testDataString = new StringBuilder();
+        testDataString.append("@relation testData\n" +
+                "@attribute mass numeric\n" +
+                "@attribute diameter numeric\n" +
+                "@attribute surface_temperature numeric\n" +
+                "@attribute pctg_oxygen numeric\n" +
+                "@attribute pctg_helium numeric\n" +
+                "@attribute pctg_iron numeric\n" +
+                "@attribute pctg_nickel numeric\n" +
+                "@attribute pctg_silicon numeric\n" +
+                "@attribute pctg_aluminum numeric\n" +
+                "@attribute pctg_calcium numeric\n" +
+                "@attribute pctg_sodium numeric\n" +
+                "@attribute pctg_potassium numeric\n" +
+                "@attribute pctg_magnesium numeric\n" +
+                "@attribute pctg_oither numeric\n" +
+                "@data\n"
+        );
         DATAVIEW_Table rawTestData = (DATAVIEW_Table) ins[1].read();
         // get the start and end ID labels (for writing to output)
-        int startId = Integer.parseInt(rawTestData.get(1, 0));
+        int startId = Integer.parseInt(rawTestData.get(0, 0));
         int endId = Integer.parseInt(rawTestData.get(rawTestData.getNumOfRows() - 1, 0));
         // trim the IDs before feeding in to the model
-        // start at row 1 because 0 is just header row
         StringBuilder idTrimmedTestData = new StringBuilder();
-        for (int row = 1; row < rawTestData.getNumOfRows(); row++) {
+        for (int row = 0; row < rawTestData.getNumOfRows(); row++) {
             // constructs the row, which will be appended to the whole table
             StringBuilder rowBuilder = new StringBuilder();
+            // start at col = 1 because col = 0 is the ID column
             for (int col = 1; col < rawTestData.getNumOfColumns(); col++) {
                 rowBuilder.append(rawTestData.get(row, col));
                 if (col == rawTestData.getNumOfColumns() - 1) { // append commas to all but last row
@@ -81,9 +90,8 @@ public class RunClustering extends Task {
             }
             idTrimmedTestData.append(rowBuilder);
         }
-        // retrieve the start and end ID's, but remove them before sending them through the model
-
-        InputStream testDataInputStream = new ByteArrayInputStream(idTrimmedTestData.toString().getBytes(Charset.forName("UTF-8")));
+        testDataString.append(idTrimmedTestData.toString());
+        InputStream testDataInputStream = new ByteArrayInputStream(testDataString.toString().getBytes(Charset.forName("UTF-8")));
         BufferedReader testDataBufferedReader = new BufferedReader(new InputStreamReader(testDataInputStream));
         Instances testData = null;
         try {
@@ -105,7 +113,8 @@ public class RunClustering extends Task {
             e.printStackTrace();
         }
 
-        int currentId = startId;
+        // perform clustering and write results
+        int currentId = startId;  // want to keep ID labels with clustering results
         StringBuilder clusterResults = new StringBuilder();
         for (Instance dataPoint: testData) {
             StringBuilder rowResult = new StringBuilder();
