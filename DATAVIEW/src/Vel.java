@@ -40,7 +40,7 @@ public class Vel extends Task {
         /* ACTUAL CALCULATION */
         Vector3D resultVelocity = initialVelocity.plus(acceleration);
 
-        System.out.println("\u001b[36m IN VELOCITY;\n\t ABOUT TO WRITE TO " + outs[0].getFileName());
+        // System.out.println("\u001b[36m IN VELOCITY;\n\t ABOUT TO WRITE TO " + outs[0].getFileName());
         outs[0].write(resultVelocity);
     }
 }

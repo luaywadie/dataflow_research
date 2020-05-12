@@ -7,7 +7,7 @@ public class ClusteringResultWriter extends Task {
     
 	public int numClusteringTasks = PlanetaryClustering.numClusteringTasks;
 	
-	ClusteringResultWriter() {
+	public ClusteringResultWriter() {
 		super("ClusteringResultWriter",
 		"This task will output to a file the test data entries and their predicted centroids (Clusters)");
 			

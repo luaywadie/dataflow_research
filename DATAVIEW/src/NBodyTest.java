@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class NBodyTest {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         WorkflowVisualization frame = new WorkflowVisualization();
         NBodyWorkflow w = new NBodyWorkflow();
         w.design();
