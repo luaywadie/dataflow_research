@@ -19,7 +19,9 @@ public class TestDataPartitioner extends Task {
     public void run() {
         DATAVIEW_Table data = (DATAVIEW_Table) ins[0].read();
         int numSamples = data.getNumOfRows();
-        int numFeatures = data.getNumOfRows();
+        int numFeatures = data.getNumOfColumns();
+
+        System.out.println("INPUT DATA:\n" + data.toString());
 
         System.out.println("TestDataPartitioner: reading in data set with "+
                 numSamples + " samples and " + numFeatures + " features");
@@ -32,6 +34,11 @@ public class TestDataPartitioner extends Task {
         }
 
         int rowsPerPartition = numSamples / PlanetaryClustering.numClusteringTasks;
+        // if no remainder, then the number of samples is equal in each cluster;
+        // otherwise, we have a remainder so we need to add one to not leave any data points out
+        if (numSamples % PlanetaryClustering.numClusteringTasks != 0) {rowsPerPartition++;}
+
+        // create partitions one at a time
         for (int partition = 0; partition < PlanetaryClustering.numClusteringTasks; partition++) {
             int startRow = partition * rowsPerPartition;
             int endRow = (partition + 1) * rowsPerPartition;
@@ -39,7 +46,7 @@ public class TestDataPartitioner extends Task {
             if (endRow > numSamples) endRow = numSamples;  // if there are not enough samples to fill final partition
 
             StringBuilder thisPartitionTable = new StringBuilder();
-            for (int row = startRow; partition < endRow; row++) {
+            for (int row = startRow; row < endRow; row++) {
                 thisPartitionTable.append(String.join(",", data.getRow(row)) + "\n");
             }
             outs[partition].write(thisPartitionTable);

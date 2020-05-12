@@ -13,7 +13,7 @@ public class PlanetaryClustering extends Workflow {
     // the number of individual tasks used to classify new training data
     public static final int numClusteringTasks = 3;
 
-    PlanetaryClustering() {
+    public PlanetaryClustering() {
         super("Planetary Clustering", "Performs numClusters-Means clustering on planet data");
         wins = new DATAVIEW_BigFile[2];
         wins[0] = new DATAVIEW_BigFile(TRAIN_INPUT);
