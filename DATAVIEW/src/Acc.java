@@ -57,16 +57,16 @@ public class Acc extends Task {
         // read the inputs
         DATAVIEW_MathVector rawThisPosition = (DATAVIEW_MathVector)ins[0].read();
         Vector3D thisPosition = new Vector3D(rawThisPosition.get(0), rawThisPosition.get(1), rawThisPosition.get(2));
-        System.out.println("\tThis position: " + thisPosition.toString());
+        // System.out.println("\tThis position: " + thisPosition.toString());
         Vector3D[] otherPositions = new Vector3D[NBodyWorkflow.N - 1];
         double[] otherMasses = new double[NBodyWorkflow.N- 1];
-        for (int otherBody = 0; otherBody < NBodyWorkflow.N - 1; otherBody++) {
-            DATAVIEW_MathVector rawOtherPosition = (DATAVIEW_MathVector) ins[1 + (2 * otherBody)].read();
-            otherPositions[otherBody] = new Vector3D(rawOtherPosition.get(0), rawOtherPosition.get(1), rawOtherPosition.get(2));
-            System.out.println("\tOther positions " + otherBody + ": " + otherPositions[otherBody].toString());
-            otherMasses[otherBody] = (double) ins[2 + (2 * otherBody)].read();
-            System.out.println("\tOther mass " + otherBody + ": " + otherMasses[otherBody]);
-        }
+            for (int otherBody = 0; otherBody < NBodyWorkflow.N - 1; otherBody++) {
+                DATAVIEW_MathVector rawOtherPosition = (DATAVIEW_MathVector) ins[1 + (2 * otherBody)].read();
+                otherPositions[otherBody] = new Vector3D(rawOtherPosition.get(0), rawOtherPosition.get(1), rawOtherPosition.get(2));
+                // System.out.println("\tOther positions " + otherBody + ": " + otherPositions[otherBody].toString());
+                otherMasses[otherBody] = (double) ins[2 + (2 * otherBody)].read();
+                // System.out.println("\tOther mass " + otherBody + ": " + otherMasses[otherBody]);
+            }
 
         /* ACTUAL CALCULATION */
         Vector3D resultAccel = Vector3D.makeOrigin();
@@ -76,10 +76,10 @@ public class Acc extends Task {
         }
 
         // Write output of this task
-        System.out.println("\u001b[36m IN ACCELERATION;\n\t ABOUT TO WRITE TO " + outs[0].getFileName());
+        // System.out.println("\u001b[36m IN ACCELERATION;\n\t ABOUT TO WRITE TO " + outs[0].getFileName());
         outs[0].write(resultAccel);
         for (int i = 1; i < NBodyWorkflow.N; i++) {
-            System.out.println("\u001b[36m \n\t ABOUT TO WRITE TO " + outs[i].getFileName());
+           // System.out.println("\u001b[36m \n\t ABOUT TO WRITE TO " + outs[i].getFileName());
             outs[i].write(otherMasses[i - 1]);
         }
     }

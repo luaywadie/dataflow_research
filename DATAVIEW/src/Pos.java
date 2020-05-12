@@ -24,7 +24,7 @@ public class Pos extends Task {
 
     @Override
     public void run() {
-        System.out.println("\u001b[36m IN POSITION;\n\t ABOUT TO WRITE TO " + outs[0].getFileName());
+        // System.out.println("\u001b[36m IN POSITION;\n\t ABOUT TO WRITE TO " + outs[0].getFileName());
 
         try{
             File f = new File(outs[0].getFileName());

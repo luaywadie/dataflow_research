@@ -1118,5 +1118,4 @@ DATAVIEW/.idea/vcs.xml
 .project
 .classpath
 DATAVIEW/src/res/planetary_data_train.csv
-DATAVIEW/src/PlanetClusterTest.java
 bin/res/planetary_data_train.csv

@@ -21,14 +21,12 @@ public class TestDataPartitioner extends Task {
         int numSamples = data.getNumOfRows();
         int numFeatures = data.getNumOfColumns();
 
-        System.out.println("INPUT DATA:\n" + data.toString());
-
-        System.out.println("TestDataPartitioner: reading in data set with "+
-                numSamples + " samples and " + numFeatures + " features");
+//        System.out.println("TestDataPartitioner: reading in data set with "+
+//                numSamples + " samples and " + numFeatures + " features");
 
         // TODO TEST: try having the number of clustering tasks gt, eq, lt number of samples
         if (PlanetaryClustering.numClusteringTasks > numSamples) {
-            String errorMsg = String.format("Number of training samples (%d) is less than " +
+            String errorMsg = String.format("Number of testing samples (%d) is less than " +
                     "number of clustering instances (%d).", numSamples, PlanetaryClustering.numClusteringTasks);
             throw new IllegalArgumentException(errorMsg);
         }
@@ -47,7 +45,7 @@ public class TestDataPartitioner extends Task {
 
             StringBuilder thisPartitionTable = new StringBuilder();
             for (int row = startRow; row < endRow; row++) {
-                thisPartitionTable.append(String.join(",", data.getRow(row)) + "\n");
+                thisPartitionTable.append(String.join(":", data.getRow(row)) + "\n");
             }
             outs[partition].write(thisPartitionTable);
         }

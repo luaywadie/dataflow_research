@@ -4,8 +4,11 @@ import weka.core.converters.ConverterUtils.DataSource;
 import weka.core.converters.CSVLoader;
 import weka.classifiers.trees.J48;
 import weka.classifiers.*;
+
 import java.util.Random;
 import java.io.File;
+import java.lang.Object;
+
 
 public class Model_Simple {
   // Data Storage and Conversion
@@ -15,21 +18,22 @@ public class Model_Simple {
   // Main Method
   public static void main(String[] args) throws Exception {
     // Read in from a .arff file and decode it
-    inputData = new DataSource("data/weather.arff");
+    inputData = new DataSource("data/data.csv");
     // Instances = every true data entry that is read in
     retrievedData = inputData.getDataSet();
+    System.out.println(retrievedData);
     // Set the number of clusters
-    numOfClusters = 2;
-    // Kmeans();
+    numOfClusters = 3;
     KmeansCSV();
+    // KmeansCSV();
   }
   public static void KmeansCSV() throws Exception {
     CSVLoader loader = new CSVLoader();
     loader.setSource(new File("data/planetary_data.csv"));
 
-    String[] options = new String[1];
-    options[0] = "-H";
-    loader.setOptions(options);
+    // String[] options = new String[1];
+    // options[0] = "-H";
+    // loader.setOptions(options);
     loader.setNoHeaderRowPresent(false);
 
     Instances data = loader.getDataSet();
@@ -37,7 +41,7 @@ public class Model_Simple {
     // Init SimpleKMeans from weka
     SimpleKMeans kmeans_instance = new SimpleKMeans();
     // Set random seed generator so output doesn't change
-   kmeans_instance.setSeed(1);
+    // kmeans_instance.setSeed(1);
     try {
       // Keep the order of Instances relative to their read-in state
      kmeans_instance.setPreserveInstancesOrder(true);
@@ -60,9 +64,18 @@ public class Model_Simple {
       //     System.out.println(" \t| Center: " + centers.instance(i));
       // }
       Instances obj = kmeans_instance.getClusterCentroids();
-      System.out.println("Centroid 1: " + obj.instance(0));
-      System.out.println("Centroid 2: " + obj.instance(1));
-      System.out.println("Centroid 3: " + obj.instance(2));
+      StringBuilder sb = new StringBuilder();
+      for (i = 0; i < 3; i++) {
+        sb.append(obj.get(i) + "\n");
+      }
+
+      // for (i = 0; i < 100; i++) {
+      //   int test = kmeans_instance.clusterInstance(data.get(400));
+      //   System.out.println(test);
+      // }
+
+      System.out.print("Hello World\nBye");
+
     } catch (Exception e) {
       // N/A
     }

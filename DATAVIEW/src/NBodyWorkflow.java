@@ -113,6 +113,7 @@ public class NBodyWorkflow extends Workflow {
 
         /* inter-time step edges (between two time steps) */
         for (int timeStep = 1; timeStep < timeSteps; timeStep++) { // add edges FROM timeStep-1 time step, to timeStep
+            positionIndex = -1;
             for (int body = 0; body < N; body++) {
                 int previousTaskIndex = N * (timeStep - 1) + body;
                 int currentTaskIndex = N * timeStep + body;
@@ -122,14 +123,11 @@ public class NBodyWorkflow extends Workflow {
                 }
 
                 // from Position to Acceleration (gives position of all bodies to acceleration similar to how initialize does it)
-                int positionInputIndex = -1; // IDEA: this should not be reinitialized for each body, only for each time step
-                for (int i = 0; i < N; i++) { // i represents the acceleration task instance for body i relative to this time step
-                    if (i == body) {  // position goes to input 0
-                        addEdge(computePositions[previousTaskIndex], 0, computeAccelerations[currentTaskIndex], 0);
-                        positionIndex += 2 * body + 1;
-                    } else {
-                        addEdge(computePositions[previousTaskIndex], 0, computeAccelerations[currentTaskIndex], positionInputIndex);
-                    }
+                if (currentTaskIndex % N == body) {
+                    addEdge(computePositions[previousTaskIndex], 0, computeAccelerations[currentTaskIndex], 0);
+                    positionIndex = 2 * body + 1;
+                } else {
+                   addEdge(computePositions[previousTaskIndex], 0, computeAccelerations[currentTaskIndex], positionIndex);
                 }
 
                 // from Position to Position (position of current body)

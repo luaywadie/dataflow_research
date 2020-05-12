@@ -18,18 +18,18 @@ public class PlanetClusterTraining extends Task {
     ins = new InputPort[1];
     outs = new OutputPort[1];
     // Assign ports
-    // ins[0] = new InputPort("data", Port.DATAVIEW_Table, "This is our data input");
-    outs[0] = new OutputPort("centroids", Port.DATAVIEW_Table, "This is the return value from SimpleKMeans Clustering");
+    ins[0] = new InputPort("data", Port.DATAVIEW_String, "This is our data input");
+    outs[0] = new OutputPort("centroids", Port.DATAVIEW_String, "This is the return value from SimpleKMeans Clustering");
   }
 
   @Override
   public void run() {
 	// Variables
 	int numClusters = PlanetaryClustering.numClusters;
-	
+
 	// Instantiate CSV Input
 	CSVLoader loader = new CSVLoader();
-	
+
 	try {
 		// Load the source via input location (File Directory Path)
 		loader.setSource(new File((String)ins[0].location));
@@ -57,6 +57,8 @@ public class PlanetClusterTraining extends Task {
 		for (i = 0; i < numClusters; i++) {
 			sb.append(centroids.get(i) + "\n");
 		}
+		System.out.println(centroids.get(0));
+
 		// Set output port to StringBuilder
 		outs[0].write(sb.toString());
 	} catch (Exception e) {
