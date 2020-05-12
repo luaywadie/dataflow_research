@@ -6,6 +6,20 @@ import weka.core.Instances;
 import java.io.*;
 import java.nio.charset.Charset;
 
+/**
+ * Takes as inputs the cluster centroids and the data which we want to perform clustering on.
+ *
+ * The cluster centroids are determined in the previous task (PlanetClusterTraining), but because
+ * we can not pass actual objects between tasks, we must take the string representation and use
+ * that to reconstruct the model here. We do this by "retraining" the model, but give it only
+ * the centroids as training data. Thus, the model is effectively reconstructed.
+ *
+ * Both the training and test sets must first be put in to ARFF before they can be used
+ * by the SimpleKMeans model.
+ *
+ * Finally, we output the sample ID with its corresponding cluster number. For convenience,
+ * we also append the data associated with that point.
+ */
 public class RunClustering extends Task {
     public RunClustering() {
         super("Clusterer", "Runs K-means clustering on a pre-trained model.");

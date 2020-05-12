@@ -3,6 +3,9 @@ import dataview.models.Port;
 import dataview.models.InputPort;
 import dataview.models.OutputPort;
 
+/**
+ * Combines all of the clustering results from the different partitions in to one output file.
+ */
 public class ClusteringResultWriter extends Task {
     
 	public int numClusteringTasks = PlanetaryClustering.numClusteringTasks;

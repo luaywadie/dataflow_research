@@ -9,8 +9,10 @@ import weka.core.converters.CSVLoader;
 
 import java.io.File;
 
+/**
+ * Trains a K-Means model.
+ */
 public class PlanetClusterTraining extends Task {
-
   public PlanetClusterTraining() {
     super("PlanetClusterTraining",
     "This task will execute SimpleKMeans from Weka onto our data");

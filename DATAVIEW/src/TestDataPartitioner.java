@@ -24,10 +24,8 @@ public class TestDataPartitioner extends Task {
         System.out.println("TestDataPartitioner: reading in data set with "+
                 numSamples + " samples and " + numFeatures + " features");  // -1 for header row
 
-
-        // TODO TEST: try having the number of clustering tasks gt, eq, lt number of samples
         if (PlanetaryClustering.numClusteringTasks > numSamples) {
-            String errorMsg = String.format("Number of testing samples (%d) is less than " +
+            String errorMsg = String.format("Number of test samples (%d) is less than " +
                     "number of clustering instances (%d).", numSamples, PlanetaryClustering.numClusteringTasks);
             throw new IllegalArgumentException(errorMsg);
         }
