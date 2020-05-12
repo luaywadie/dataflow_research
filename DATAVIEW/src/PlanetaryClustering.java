@@ -14,7 +14,7 @@ public class PlanetaryClustering extends Workflow {
     public static final int numClusteringTasks = 3;
 
     public PlanetaryClustering() {
-        super("Planetary Clustering", "Performs numClusters-Means clustering on planet data");
+        super("Planetary Clustering", "Performs " + numClusters + "-Means clustering on planet data");
         wins = new DATAVIEW_BigFile[2];
         wins[0] = new DATAVIEW_BigFile(TRAIN_INPUT);
         wins[1] = new DATAVIEW_BigFile(TEST_INPUT);
