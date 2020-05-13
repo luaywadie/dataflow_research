@@ -1,3 +1,0 @@
-ComputeAcceleration_Task.java  ComputeVelocity_Task.java    NBodyTest.java
-ComputeCollisions_Task.java    InitializeNBody_Task.java    NBodyWorkflow.java
-ComputePosition_Task.java      NBodyResultWriter_Task.java  Vector3D.java
