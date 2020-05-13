@@ -1,5 +1,14 @@
 import dataview.models.*;
 
+/**
+ * ===============================================
+ * This Workflow generates the clustering tasks required to run our structure and conncets edges accordingly.
+ * ===============================================
+ * Input(s): Training and Testing CSV files of data to be worked on.
+ * Output(s): Centroid assignments for each data within the Testing data.
+ * ===============================================
+ */
+
 public class PlanetaryClustering extends Workflow {
     // the path to the file which contains the training data; wins[0]
     public final String TRAIN_INPUT = "planetary_data_train.csv";

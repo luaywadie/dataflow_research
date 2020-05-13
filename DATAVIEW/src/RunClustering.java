@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 
 /**
+ * ===============================================
  * Takes as inputs the cluster centroids and the data which we want to perform clustering on.
  *
  * The cluster centroids are determined in the previous task (PlanetClusterTraining), but because
@@ -19,6 +20,10 @@ import java.nio.charset.Charset;
  *
  * Finally, we output the sample ID with its corresponding cluster number. For convenience,
  * we also append the data associated with that point.
+ * ===============================================
+ * Input(s): Centroids from PlanetClusterTraining Task and Test data from TestDataPartitioner Task
+ * Output(s): Centroid assignment for each data entry within the Test data.
+ * ===============================================
  */
 public class RunClustering extends Task {
     public RunClustering() {

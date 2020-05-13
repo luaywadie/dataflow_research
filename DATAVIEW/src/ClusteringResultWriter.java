@@ -4,7 +4,12 @@ import dataview.models.InputPort;
 import dataview.models.OutputPort;
 
 /**
- * Combines all of the clustering results from the different partitions in to one output file.
+ * ===============================================
+ * This Task will finalize and combine the results of assignments from RunClustering Task.
+ * ===============================================
+ * Input(s): Assigned centroids to the Test data.
+ * Output(s): Final result file displaying each Test data and its assigned centroid.
+ * ===============================================
  */
 public class ClusteringResultWriter extends Task {
     

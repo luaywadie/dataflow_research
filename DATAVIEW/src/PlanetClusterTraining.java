@@ -10,7 +10,12 @@ import weka.core.converters.CSVLoader;
 import java.io.File;
 
 /**
- * Trains a K-Means model.
+ * ===============================================
+ * This task will construct the kMeansClustering model from Weka given our training inputs.
+ * ===============================================
+ * Input(s): Training CSV Data to input into the model
+ * Output(s): Calculated centroids from the model in CSV format.
+ * ===============================================
  */
 public class PlanetClusterTraining extends Task {
   public PlanetClusterTraining() {
@@ -60,7 +65,7 @@ public class PlanetClusterTraining extends Task {
 			sb.append(centroids.get(i) + "\n");
 		}
 
-		// Set output port to StringBuilder
+		// Set output port to StringBuilder and convert commas into colons to support DATAVIEW_Table format
 		outs[0].write(sb.toString().replace(',', ':'));  // ':' is used by DATAVIEW_Table
 
 	} catch (Exception e) {

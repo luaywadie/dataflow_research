@@ -9,6 +9,7 @@ builds/arithmetic_with_ast/.idea/dictionaries/Blake.xml
 *.class
 .idea
 
+
 # DATAVIEW Src Ignores
 DATAVIEW/src/Algorithm1.java
 DATAVIEW/src/Algorithm2.java

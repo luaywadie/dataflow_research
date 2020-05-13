@@ -1,7 +1,12 @@
 import dataview.models.*;
 
 /**
- * Partitions the test data set so that clustering on these points by the model may be done in parallel.
+ * ===============================================
+ * This Task distributes the data within the Test CSV to RunClustering equally.
+ * ===============================================
+ * Input(s): Testing CSV data of entries that need to be classified / assigned
+ * Output(s): Equal distribution of data to each RunClustering Task for processing and assigning.
+ * ===============================================
  */
 public class TestDataPartitioner extends Task {
     public TestDataPartitioner() {
