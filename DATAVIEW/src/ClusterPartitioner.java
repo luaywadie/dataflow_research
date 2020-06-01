@@ -12,11 +12,11 @@ public class ClusterPartitioner extends Task {
             ins[p] = new InputPort("Partition " + p, Port.DATAVIEW_MathMatrix, "One partition of the data set");
         }
 
-        outs = new OutputPort[PlanetaryClusteringV2.K];
-        for (int k = 0; k < outs.length; k++) {
+        outs = new OutputPort[PlanetaryClusteringV2.K * 2];
+        for (int k = 0; k < PlanetaryClusteringV2.K; k++) {
             // +1 to k because cluster labels start from 1, not 0
-            outs[2 * (k - 1)] = new OutputPort("Cluster " + (k + 1), Port.DATAVIEW_MathMatrix,"All samples in Cluster no. " + (k + 1));
-            outs[2 * k - 1] = new OutputPort("Centroid " + (k + 1), Port.DATAVIEW_MathVector, "The centroid of cluster no. " + (k + 1));
+            outs[2 * k] = new OutputPort("Cluster " + (k + 1), Port.DATAVIEW_MathMatrix,"All samples in Cluster no. " + (k + 1));
+            outs[2 * k + 1] = new OutputPort("Centroid " + (k + 1), Port.DATAVIEW_MathVector, "The centroid of cluster no. " + (k + 1));
         }
     }
 
@@ -45,7 +45,7 @@ public class ClusterPartitioner extends Task {
             clusterIndices.get(clusterNo).add(row);  // add the row index to the array list for that cluster
         }
 
-        // create a DATAVIEW_MathMatrix for each cluster and write the result
+        // create a DATAVIEW_MathMatrix for each cluster, find its centroid and write the results
         for (int k = 1; k <= PlanetaryClusteringV2.K; k++) {
             ArrayList<Integer> rowsToCopy = clusterIndices.get(k);
             int numRows = rowsToCopy.size();
@@ -53,16 +53,28 @@ public class ClusterPartitioner extends Task {
             for (int row = 0; row < numRows; row++) {
                 clusterPartition.setRow(row, fullMatrix.getRow(rowsToCopy.get(row)));  // retrieve the index row to be copied from the stored ArrayList
             }
+            // removing the cluster number column, which is no longer required and inhibits vector operations
+            clusterPartition = DATAVIEW_MathMatrix.dropColumn(clusterPartition.getNumOfColumns() - 1, clusterPartition);
+            // write all points in the entire cluster
             outs[2 * (k - 1)].write(clusterPartition);  // k - 1 since clusters are not 0 indexed
+            // pass on the centroid of the cluster
+            outs[2 * k - 1].write(calculateCentroid(clusterPartition));
         }
     }
 
     /**
      *
-     * @param clusterData A DATAVIEW_MathMatrix whose points ALL belong to cluster
+     * @param clusterData A DATAVIEW_MathMatrix whose points ALL belong to a single cluster; final column in cluster number
      * @return
      */
+    // TODO: TEST THIS
     private DATAVIEW_MathVector calculateCentroid(DATAVIEW_MathMatrix clusterData) {
+        DATAVIEW_MathVector centroid = new DATAVIEW_MathVector(PlanetaryClusteringV2.F);
 
+        for (int col = 0; col < PlanetaryClusteringV2.F; col++) {
+            centroid.set(col, clusterData.getCol(col).sum());  // sum
+            centroid.divide(col, clusterData.getNumOfRows());  // divide to average
+        }
+        return centroid;
     }
 }

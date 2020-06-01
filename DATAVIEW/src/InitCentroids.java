@@ -32,8 +32,9 @@ public class InitCentroids extends Task {
     @Override
     public void run() {
         DATAVIEW_MathVector[] features = new DATAVIEW_MathVector[PlanetaryClusteringV2.F];
-        for (int f = 0; f < PlanetaryClusteringV2.F; f++)
+        for (int f = 0; f < PlanetaryClusteringV2.F; f++) {
             features[f] = (DATAVIEW_MathVector) ins[f].read();
+        }
 
         // combine features from normalizer in to a single matrix
         DATAVIEW_MathMatrix data = new DATAVIEW_MathMatrix(features);
