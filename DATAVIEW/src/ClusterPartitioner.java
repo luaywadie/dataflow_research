@@ -28,7 +28,7 @@ public class ClusterPartitioner extends Task {
             incomingPartitions[p] = (DATAVIEW_MathMatrix) ins[p].read();
         }
 
-        // combine all matrices in to one
+        // combine all matrices in to one; includes cluster numbers
         DATAVIEW_MathMatrix fullMatrix = DATAVIEW_MathMatrix.concatenate(incomingPartitions);
 
         /* Figure out which rows need to be copied to which cluster partition by keep track of row indices for each cluster number */
@@ -39,26 +39,34 @@ public class ClusterPartitioner extends Task {
         for (int cluster = 1; cluster <= PlanetaryClusteringV2.K; cluster++) {
             clusterIndices.put(cluster, new ArrayList<>(initCapacity));
         }
-        int clusterCol = fullMatrix.getNumOfColumns() - 1; // the index for the column containing the cluster label
+        int clusterColIndex = fullMatrix.getNumOfColumns() - 1; // the index for the column containing the cluster label
+        // populate the HashMap array lists with the row numbers that belong to each cluster
         for (int row = 0; row < fullMatrix.getNumOfRows(); row++) {
-            int clusterNo = (int) fullMatrix.get(row, clusterCol);  // the cluster assigned to the row as an int
+            int clusterNo = (int) fullMatrix.get(row, clusterColIndex);  // the cluster assigned to the row as an int
             clusterIndices.get(clusterNo).add(row);  // add the row index to the array list for that cluster
         }
 
-        // create a DATAVIEW_MathMatrix for each cluster, find its centroid and write the results
+        // create a DATAVIEW_MathMatrix for each cluster; find its centroid
         for (int k = 1; k <= PlanetaryClusteringV2.K; k++) {
-            ArrayList<Integer> rowsToCopy = clusterIndices.get(k);
+            ArrayList<Integer> rowsToCopy = clusterIndices.get(k);  // list of rows that belong to cluster k
             int numRows = rowsToCopy.size();
-            DATAVIEW_MathMatrix clusterPartition = new DATAVIEW_MathMatrix(numRows, fullMatrix.getNumOfColumns());
-            for (int row = 0; row < numRows; row++) {
-                clusterPartition.setRow(row, fullMatrix.getRow(rowsToCopy.get(row)));  // retrieve the index row to be copied from the stored ArrayList
+            DATAVIEW_MathMatrix thisCluster;  // the MathMatrix that holds all of the data rows that are in cluster k (w/cluster no. as final column)
+            if (numRows == 0) {  // the cluster has no points assigned to it; write dummy row to avoid errors
+                thisCluster = new DATAVIEW_MathMatrix(1, fullMatrix.getNumOfColumns());
+                double[][] zeroVec = new double[1][PlanetaryClusteringV2.F + 1]; // +1 because we are expecting to have cluster # in final col
+                zeroVec[0][zeroVec[0].length - 1] = (double) k; // set cluster no. column to k
+                thisCluster = new DATAVIEW_MathMatrix(zeroVec);
+            } else {
+                thisCluster = new DATAVIEW_MathMatrix(numRows, fullMatrix.getNumOfColumns());
+                for (int i = 0; i < numRows; i++) {
+                    thisCluster.setRow(i, fullMatrix.getRow(rowsToCopy.get(i))); // copy the rows from the fullMatrix to the partition
+                }
             }
-            // removing the cluster number column, which is no longer required and inhibits vector operations
-            clusterPartition = DATAVIEW_MathMatrix.dropColumn(clusterPartition.getNumOfColumns() - 1, clusterPartition);
+
             // write all points in the entire cluster
-            outs[2 * (k - 1)].write(clusterPartition);  // k - 1 since clusters are not 0 indexed
+            outs[2 * (k - 1)].write(thisCluster);  // k - 1 since clusters are not 0 indexed
             // pass on the centroid of the cluster
-            outs[2 * k - 1].write(calculateCentroid(clusterPartition));
+            outs[2 * k - 1].write(calculateCentroid(DATAVIEW_MathMatrix.dropColumn(thisCluster.getNumOfColumns() - 1, thisCluster)));
         }
     }
 
@@ -72,7 +80,7 @@ public class ClusterPartitioner extends Task {
         DATAVIEW_MathVector centroid = new DATAVIEW_MathVector(PlanetaryClusteringV2.F);
 
         for (int col = 0; col < PlanetaryClusteringV2.F; col++) {
-            centroid.set(col, clusterData.getCol(col).sum());  // sum
+            centroid.set(col, clusterData.getColumn(col).sum());  // sum
             centroid.divide(col, clusterData.getNumOfRows());  // divide to average
         }
         return centroid;

@@ -34,15 +34,19 @@ public class UpdateCentroids extends Task {
             partitionsWithCluster[p] = ((DATAVIEW_MathMatrix) ins[p].read());
         }
         DATAVIEW_MathMatrix combinedPartitions = DATAVIEW_MathMatrix.concatenate(partitionsWithCluster);
-
         // Create the new centroids and the partitions list WITHOUT the cluster assigned column (because it is not relevant after centroids are updated)
         DATAVIEW_MathMatrix newCentroids = new DATAVIEW_MathMatrix(PlanetaryClusteringV2.K, PlanetaryClusteringV2.F);
         DATAVIEW_MathMatrix partitionsNoCluster = new DATAVIEW_MathMatrix(combinedPartitions.getNumOfRows(), PlanetaryClusteringV2.F);
+        // Get the count of data points within each centroid
+        DATAVIEW_MathVector centroidDataCount = new DATAVIEW_MathVector(PlanetaryClusteringV2.K);
 
         // Loop over every partition and append the centroid row it was assigned to
         for (int row = 0; row < combinedPartitions.getNumOfRows(); row++) {
             // grab the cluster number and decrement by 1 to index in to newCentroids matrix
             int clusterIndex = (int) combinedPartitions.getRow(row).get(combinedPartitions.getNumOfColumns() - 1) - 1;
+            // Increment the index of centroidDataCount corresponding to the centroid
+            double oldValue = centroidDataCount.get(clusterIndex);
+            centroidDataCount.set(clusterIndex, oldValue + 1.0);
             // sum values for each column; will be averaged after all values have been summed
             // can't use DATAVIEW_MathMatrix.addRow() because we need to drop the final column (which is just the cluster number)
             for (int column = 0; column < combinedPartitions.getNumOfColumns() - 1; column++) {
@@ -55,7 +59,9 @@ public class UpdateCentroids extends Task {
 
         // Divide the centroids by total number of data points to get the average for every feature
         newCentroids.div(combinedPartitions.getNumOfRows());
-
+        for (int i = 0; i < newCentroids.getNumOfRows(); i++) {
+            newCentroids.getRow(i).divide(centroidDataCount.get(i));
+        }
 
         // Write outs
         // Partitions to write out =>

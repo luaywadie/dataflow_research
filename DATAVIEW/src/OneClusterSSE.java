@@ -6,7 +6,7 @@ public class OneClusterSSE extends Task {
 
         ins = new InputPort[2];
         ins[0] = new InputPort("Partition", Port.DATAVIEW_MathMatrix, "All data points in the cluster.");
-        ins[1] = new InputPort("Centoid", Port.DATAVIEW_MathVector, "The centroid for the cluster");
+        ins[1] = new InputPort("Centroid", Port.DATAVIEW_MathVector, "The centroid for the cluster");
 
         outs = new OutputPort[1];
         outs[0] = new OutputPort("SSE", Port.DATAVIEW_double, "The SSE of the cluster.");
@@ -14,17 +14,20 @@ public class OneClusterSSE extends Task {
 
     @Override
     public void run() {
-        DATAVIEW_MathMatrix data = (DATAVIEW_MathMatrix) ins[0].read();
+        DATAVIEW_MathMatrix matrix = (DATAVIEW_MathMatrix) ins[0].read();
+        // drop the final column from the data, which is the column that gives the column number
+        DATAVIEW_MathMatrix data = DATAVIEW_MathMatrix.dropColumn(matrix.getNumOfColumns() - 1, matrix);
         DATAVIEW_MathVector centroid = (DATAVIEW_MathVector) ins[1].read();
 
         double sse = 0;
         for (int row = 0; row < data.getNumOfRows(); row++) {
-            sse += euclideanDist(data.getRow(row), centroid);
+            sse += squaredEuclideanDist(data.getRow(row), centroid);
         }
         outs[0].write(sse);
     }
 
-    private double euclideanDist(DATAVIEW_MathVector x, DATAVIEW_MathVector y) {
+    // euclidean distance would be
+    private double squaredEuclideanDist(DATAVIEW_MathVector x, DATAVIEW_MathVector y) {
         // make sure the vectors are the same length
         if (x.length() != y.length()) {
             throw new IllegalArgumentException("Vectors should be the same length. Received " + x.length() + " and " +y.length());
