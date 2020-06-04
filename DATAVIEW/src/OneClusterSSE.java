@@ -10,7 +10,7 @@ public class OneClusterSSE extends Task {
 
         outs = new OutputPort[2];
         outs[0] = new OutputPort("SSE", Port.DATAVIEW_double, "The SSE of the cluster.");
-        outs[0] = new OutputPort("Cardinality", Port.DATAVIEW_int, "The cardinality of the cluster.");
+        outs[1] = new OutputPort("Cardinality", Port.DATAVIEW_int, "The cardinality of the cluster.");
     }
 
     @Override

@@ -21,7 +21,7 @@ public class AllClusterSSE extends Task {
         int totalCardinality = 0;
 
         // gather relevant info from each cluster
-        for (int k = 0; k < clusterSSEs.length; k++) {
+        for (int k = 0; k < KMeansClustering.K; k++) {
             clusterSSEs[k] = (double) ins[2 * k].read();  // the SSE of cluster k + 1
             int thisClusterCardinality = (int) ins[2 * k + 1].read();  // the cardinality of cluster k + 1
             totalCardinality += thisClusterCardinality;

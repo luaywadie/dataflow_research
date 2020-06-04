@@ -3,7 +3,7 @@ import dataview.models.Task;
 import dataview.models.Workflow;
 
 public class KMeansClustering extends Workflow {
-    private final String UNIQUE_ID = "anotherTest_";  // used to easily find output data for a specific run of the workflow
+    private final String UNIQUE_ID = "0101_";  // used to easily find output data for a specific run of the workflow
     private final String INPUT_FILE = "seeds_dataset.csv";
     private final String CLUSTER_ASSIGNMENTS_OUTPUT = UNIQUE_ID + "KMeans_Assignments";
     private final String CLUSTER_SSE_OUTPUT = UNIQUE_ID + "KMeans_SSEs";
@@ -97,7 +97,7 @@ public class KMeansClustering extends Workflow {
         // OneClusterSSE to AllClusterSSE
         for (int k = 0; k < K; k++) {
             addEdge(oneClusterSSE[k], 0, allClusterSSE, 2 * k);  // SSE value
-            addEdge(oneClusterSSE[k], 1, 2*k + 1);  // cluster cardinality
+            addEdge(oneClusterSSE[k], 1, allClusterSSE, 2 * k + 1);  // cluster cardinality
         }
     }
 }
