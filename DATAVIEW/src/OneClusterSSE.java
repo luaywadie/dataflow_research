@@ -15,13 +15,16 @@ public class OneClusterSSE extends Task {
     @Override
     public void run() {
         DATAVIEW_MathMatrix matrix = (DATAVIEW_MathMatrix) ins[0].read();
-        // drop the final column from the data, which is the column that gives the column number
-        DATAVIEW_MathMatrix data = DATAVIEW_MathMatrix.dropColumn(matrix.getNumOfColumns() - 1, matrix);
-        DATAVIEW_MathVector centroid = (DATAVIEW_MathVector) ins[1].read();
+        double sse = 0.0;
 
-        double sse = 0;
-        for (int row = 0; row < data.getNumOfRows(); row++) {
-            sse += squaredEuclideanDist(data.getRow(row), centroid);
+        if (matrix.getNumOfRows() != 0) {  // there could be 0 points assigned to this cluster
+            // drop the final column from the data, which is the column that gives the column number
+            DATAVIEW_MathMatrix data = DATAVIEW_MathMatrix.dropColumn(matrix.getNumOfColumns() - 1, matrix);
+            DATAVIEW_MathVector centroid = (DATAVIEW_MathVector) ins[1].read();
+
+            for (int row = 0; row < data.getNumOfRows(); row++) {
+                sse += squaredEuclideanDist(data.getRow(row), centroid);
+            }
         }
         outs[0].write(sse);
     }

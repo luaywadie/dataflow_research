@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class FeaturePartitioner extends Task {
 
-    public static int numbOfFeatures = PlanetaryClusteringV2.F;
+    public static int numbOfFeatures = KMeansClustering.F;
 
     public FeaturePartitioner() {
         super("FeaturePartitioner",

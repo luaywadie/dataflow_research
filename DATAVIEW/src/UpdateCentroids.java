@@ -14,31 +14,31 @@ public class UpdateCentroids extends Task {
         super("UpdateCentroids",
                 "This task will calculate the average value for each feature and set it as the new centroid");
         // Setup ports
-        ins = new InputPort[PlanetaryClusteringV2.P];  // inputs are partitions WITH assigned cluster as final column
-        outs = new OutputPort[PlanetaryClusteringV2.P + 1];  // output P partitions, and also a matrix containing cluster centroids
+        ins = new InputPort[KMeansClustering.P];  // inputs are partitions WITH assigned cluster as final column
+        outs = new OutputPort[KMeansClustering.P + 1];  // output P partitions, and also a matrix containing cluster centroids
         // Assign Ports
-        for (int i = 0; i < PlanetaryClusteringV2.P; i++) {
+        for (int i = 0; i < KMeansClustering.P; i++) {
             ins[i] = new InputPort("partition", Port.DATAVIEW_MathMatrix, "This is our input partition (data) at index i");
         }
-        for (int i = 0; i < PlanetaryClusteringV2.P; i++) {
+        for (int i = 0; i < KMeansClustering.P; i++) {
             outs[i] = new OutputPort("partition", Port.DATAVIEW_MathMatrix, "This is our output partition (data) at index i");
         }
-        outs[PlanetaryClusteringV2.P] = new OutputPort("centroids", Port.DATAVIEW_MathMatrix, "Newly calculated centroids");
+        outs[KMeansClustering.P] = new OutputPort("centroids", Port.DATAVIEW_MathMatrix, "Newly calculated centroids");
     }
 
     @Override
     public void run() {
         // put all paritions in to array so they can be concatenated
-        DATAVIEW_MathMatrix[] partitionsWithCluster = new DATAVIEW_MathMatrix[PlanetaryClusteringV2.P];
+        DATAVIEW_MathMatrix[] partitionsWithCluster = new DATAVIEW_MathMatrix[KMeansClustering.P];
         for (int p = 0; p < ins.length; p++) {
             partitionsWithCluster[p] = ((DATAVIEW_MathMatrix) ins[p].read());
         }
         DATAVIEW_MathMatrix combinedPartitions = DATAVIEW_MathMatrix.concatenate(partitionsWithCluster);
         // Create the new centroids and the partitions list WITHOUT the cluster assigned column (because it is not relevant after centroids are updated)
-        DATAVIEW_MathMatrix newCentroids = new DATAVIEW_MathMatrix(PlanetaryClusteringV2.K, PlanetaryClusteringV2.F);
-        DATAVIEW_MathMatrix partitionsNoCluster = new DATAVIEW_MathMatrix(combinedPartitions.getNumOfRows(), PlanetaryClusteringV2.F);
+        DATAVIEW_MathMatrix newCentroids = new DATAVIEW_MathMatrix(KMeansClustering.K, KMeansClustering.F);
+        DATAVIEW_MathMatrix partitionsNoCluster = new DATAVIEW_MathMatrix(combinedPartitions.getNumOfRows(), KMeansClustering.F);
         // Get the count of data points within each centroid
-        DATAVIEW_MathVector centroidDataCount = new DATAVIEW_MathVector(PlanetaryClusteringV2.K);
+        DATAVIEW_MathVector centroidDataCount = new DATAVIEW_MathVector(KMeansClustering.K);
 
         // Loop over every partition and append the centroid row it was assigned to
         for (int row = 0; row < combinedPartitions.getNumOfRows(); row++) {
@@ -65,8 +65,8 @@ public class UpdateCentroids extends Task {
 
         // Write outs
         // Partitions to write out =>
-        DATAVIEW_MathMatrix[] partitions = partitionsNoCluster.partitionByRow(PlanetaryClusteringV2.P);
-        for (int p = 0; p < PlanetaryClusteringV2.P; p++) {
+        DATAVIEW_MathMatrix[] partitions = partitionsNoCluster.partitionByRow(KMeansClustering.P);
+        for (int p = 0; p < KMeansClustering.P; p++) {
             outs[p].write(partitions[p]);
         }
 

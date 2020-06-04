@@ -1,33 +1,30 @@
-import dataview.models.*;
+import dataview.models.DATAVIEW_BigFile;
+import dataview.models.Task;
+import dataview.models.Workflow;
 
-public class PlanetaryClusteringV2 extends Workflow {
-    private final String INPUT_FILE = "planetary_data_IN.csv";
-    private final String CLUSTER_SSE_FILE_PREFIX = "planetary_clusters_SSE_";
-    private final String CLUSTER_RESULT_FILE_PREFIX = "planetary_clusters_result_";
-    private final String TOTAL_SSE_FILE = "planetary_clusters_SSE_all";
+public class KMeansClustering extends Workflow {
+    private final String UNIQUE_ID = "ooByGooBy_";  // used to easily find output data for a specific run of the workflow
+    private final String INPUT_FILE = "seeds_dataset.csv";
+    private final String CLUSTER_ASSIGNMENTS_OUTPUT = UNIQUE_ID + "KMeans_Assignments";
+    private final String CLUSTER_SSE_OUTPUT = UNIQUE_ID + "KMeans_SSEs";
 
     // constants
     public static final int K = 3;  // number of clusters
     public static final int P = 4; // how many partitions to divide data in to
     public static final int N = 4; // number of iterations to run for (may not converge)
-    public static final int F = 7; // number of features in the data set
+    // TODO: CHANGE THIS BACK TO 7 ONCE WE DEAL WITH ID COLUMN
+    public static final int F = 8; // number of features in the data set (excluding ID)
 
-    public PlanetaryClusteringV2() {
+    public KMeansClustering() {
         super("PlanetaryClustering", "Use K-Means to group similar planets");
         wins = new DATAVIEW_BigFile[1];
         wins[0] = new DATAVIEW_BigFile(INPUT_FILE);
 
-        // output files for the each cluster's data points
-        wouts = new DATAVIEW_BigFile[ 2 * K + 1];
-        for (int k = 0; k < K; k++) {
-            wouts[k] = new DATAVIEW_BigFile(CLUSTER_RESULT_FILE_PREFIX + k);
-        }
-        // output files for each individual cluster's SSE
-        for (int k = K; k < 2 * K; k++) {
-            wouts[k] = new DATAVIEW_BigFile(CLUSTER_SSE_FILE_PREFIX + (k % K));
-        }
-        // output file for ALL cluster's SSEs summed
-        wouts[2 * K] = new DATAVIEW_BigFile(TOTAL_SSE_FILE);
+        wouts = new DATAVIEW_BigFile[2];
+        // original data set but with cluster assignment as the last column
+        wouts[0] = new DATAVIEW_BigFile(CLUSTER_ASSIGNMENTS_OUTPUT);
+        // SSE of each cluster individually, as well as the sum of all of the errors
+        wouts[1] = new DATAVIEW_BigFile(CLUSTER_SSE_OUTPUT);
 
     }
 
@@ -46,21 +43,15 @@ public class PlanetaryClusteringV2 extends Workflow {
         Task clusterPartitioner = addTask("ClusterPartitioner");
         Task[] oneClusterSSE = addTasks("OneClusterSSE", K);
         Task allClusterSSE = addTask("AllClusterSSE");
+        Task clusteringResultWriter = addTask("ClusteringResultWriter");
 
         // ------ IO edges ------ //
         // input
         addEdge(0, featurePartitioner, 0);
-
-        // output for each cluster's data points; wouts[0..K)
-        for (int k = 0; k < K; k++) {
-            addEdge(clusterPartitioner, 2 * k, k);
-        }
-        // outputs of each cluster's individual SSE; wouts[K..2 * K)
-        for (int k = K; k < 2 * K; k++) {
-            addEdge(oneClusterSSE[k % K], 0, k);
-        }
-        // output the total SSE amongst ALL clusters; wouts[2 * K]
-        addEdge(allClusterSSE, 0, 2 * K);
+        // clustering assignments
+        addEdge(clusteringResultWriter, 0);
+        // SSE (for all clusters and total)
+        addEdge(allClusterSSE, 1);
 
         // ------ Inter-Task Edges ------ //
         // from FeaturePartitioner to each instance of NormalizeData
@@ -97,8 +88,9 @@ public class PlanetaryClusteringV2 extends Workflow {
         // P * (N - 1): The first instance of AssignClusters in the final iteration of AssignClusters
         for (int p = P * (N - 1); p < P * N; p++)
             addEdge(iterAssignClusters[p], 0, clusterPartitioner, p % P);
-        // from ClusterPartitioner to each instance of OneClusterSSE
+        // from ClusterPartitioner to each instance of OneClusterSSE plus ClusteringResultWriter
         for (int k = 0; k < K; k++) {
+            addEdge(clusterPartitioner, 2 * k, clusteringResultWriter, k);  // data points
             addEdge(clusterPartitioner, 2 * k, oneClusterSSE[k], 0); // data points
             addEdge(clusterPartitioner, 2 * k + 1, oneClusterSSE[k], 1);  // centroids
         }
