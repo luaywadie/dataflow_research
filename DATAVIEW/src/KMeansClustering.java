@@ -3,7 +3,7 @@ import dataview.models.Task;
 import dataview.models.Workflow;
 
 public class KMeansClustering extends Workflow {
-    private final String UNIQUE_ID = "ooByGooBy_";  // used to easily find output data for a specific run of the workflow
+    private final String UNIQUE_ID = "anotherTest_";  // used to easily find output data for a specific run of the workflow
     private final String INPUT_FILE = "seeds_dataset.csv";
     private final String CLUSTER_ASSIGNMENTS_OUTPUT = UNIQUE_ID + "KMeans_Assignments";
     private final String CLUSTER_SSE_OUTPUT = UNIQUE_ID + "KMeans_SSEs";
@@ -12,8 +12,7 @@ public class KMeansClustering extends Workflow {
     public static final int K = 3;  // number of clusters
     public static final int P = 4; // how many partitions to divide data in to
     public static final int N = 4; // number of iterations to run for (may not converge)
-    // TODO: CHANGE THIS BACK TO 7 ONCE WE DEAL WITH ID COLUMN
-    public static final int F = 8; // number of features in the data set (excluding ID)
+    public static final int F = 7; // number of features in the data set (excluding ID)
 
     public KMeansClustering() {
         super("PlanetaryClustering", "Use K-Means to group similar planets");

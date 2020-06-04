@@ -39,8 +39,7 @@ public class ClusteringResultWriter extends Task {
 				combinedData.append(rowId++ + ", " + trimmedRowString + "\n");
 			}
 		}
-
-		System.out.println(combinedData);
+		
 		// Write out
 		outs[0].write(combinedData);
     }
