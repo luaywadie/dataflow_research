@@ -8,8 +8,9 @@ public class OneClusterSSE extends Task {
         ins[0] = new InputPort("Partition", Port.DATAVIEW_MathMatrix, "All data points in the cluster.");
         ins[1] = new InputPort("Centroid", Port.DATAVIEW_MathVector, "The centroid for the cluster");
 
-        outs = new OutputPort[1];
+        outs = new OutputPort[2];
         outs[0] = new OutputPort("SSE", Port.DATAVIEW_double, "The SSE of the cluster.");
+        outs[0] = new OutputPort("Cardinality", Port.DATAVIEW_int, "The cardinality of the cluster.");
     }
 
     @Override
@@ -27,6 +28,7 @@ public class OneClusterSSE extends Task {
             }
         }
         outs[0].write(sse);
+        outs[1].write(matrix.getNumOfRows());
     }
 
     // euclidean distance would be

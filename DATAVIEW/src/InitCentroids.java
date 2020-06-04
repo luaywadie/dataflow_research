@@ -48,8 +48,9 @@ public class InitCentroids extends Task {
         // define initial centroids; K centroids with F dimensions
         double[][] centroids = new double[KMeansClustering.K][KMeansClustering.F];
         for (int k = 0; k < KMeansClustering.K; k++) {
+            int randomRow = (int)(Math.random() * data.getNumOfRows());
             for (int f = 0; f < KMeansClustering.F; f++) {
-                centroids[k][f] = Math.random();
+                centroids[k][f] = data.get(randomRow,f);
             }
         }
         DATAVIEW_MathMatrix centroidMatrix = new DATAVIEW_MathMatrix(centroids);

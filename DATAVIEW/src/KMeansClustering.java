@@ -96,7 +96,8 @@ public class KMeansClustering extends Workflow {
 
         // OneClusterSSE to AllClusterSSE
         for (int k = 0; k < K; k++) {
-            addEdge(oneClusterSSE[k], 0, allClusterSSE, k);
+            addEdge(oneClusterSSE[k], 0, allClusterSSE, 2 * k);  // SSE value
+            addEdge(oneClusterSSE[k], 1, 2*k + 1);  // cluster cardinality
         }
     }
 }
