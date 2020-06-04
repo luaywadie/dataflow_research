@@ -7,13 +7,13 @@ public class ClusterPartitioner extends Task {
     public ClusterPartitioner() {
         super("Cluster Partitioner", "Separates data set by assigned cluster number");
 
-        ins = new InputPort[PlanetaryClusteringV2.P];
+        ins = new InputPort[KMeansClustering.P];
         for (int p = 0; p < ins.length; p++) {
             ins[p] = new InputPort("Partition " + p, Port.DATAVIEW_MathMatrix, "One partition of the data set");
         }
 
-        outs = new OutputPort[PlanetaryClusteringV2.K * 2];
-        for (int k = 0; k < PlanetaryClusteringV2.K; k++) {
+        outs = new OutputPort[KMeansClustering.K * 2];
+        for (int k = 0; k < KMeansClustering.K; k++) {
             // +1 to k because cluster labels start from 1, not 0
             outs[2 * k] = new OutputPort("Cluster " + (k + 1), Port.DATAVIEW_MathMatrix,"All samples in Cluster no. " + (k + 1));
             outs[2 * k + 1] = new OutputPort("Centroid " + (k + 1), Port.DATAVIEW_MathVector, "The centroid of cluster no. " + (k + 1));
@@ -33,10 +33,10 @@ public class ClusterPartitioner extends Task {
 
         /* Figure out which rows need to be copied to which cluster partition by keep track of row indices for each cluster number */
         // map the cluster number to the row indices in which they appear in the fullMatrix
-        HashMap<Integer, ArrayList<Integer>> clusterIndices = new HashMap<>(PlanetaryClusteringV2.K, 1.0f); // key: cluster no.; value: list of row indices that are in that cluster
+        HashMap<Integer, ArrayList<Integer>> clusterIndices = new HashMap<>(KMeansClustering.K, 1.0f); // key: cluster no.; value: list of row indices that are in that cluster
         // initialize the HashMap
-        int initCapacity = (int) .5 * (fullMatrix.getNumOfRows() / PlanetaryClusteringV2.K);
-        for (int cluster = 1; cluster <= PlanetaryClusteringV2.K; cluster++) {
+        int initCapacity = (int) .5 * (fullMatrix.getNumOfRows() / KMeansClustering.K);
+        for (int cluster = 1; cluster <= KMeansClustering.K; cluster++) {
             clusterIndices.put(cluster, new ArrayList<>(initCapacity));
         }
         int clusterColIndex = fullMatrix.getNumOfColumns() - 1; // the index for the column containing the cluster label
@@ -47,26 +47,26 @@ public class ClusterPartitioner extends Task {
         }
 
         // create a DATAVIEW_MathMatrix for each cluster; find its centroid
-        for (int k = 1; k <= PlanetaryClusteringV2.K; k++) {
+        for (int k = 1; k <= KMeansClustering.K; k++) {
             ArrayList<Integer> rowsToCopy = clusterIndices.get(k);  // list of rows that belong to cluster k
             int numRows = rowsToCopy.size();
-            DATAVIEW_MathMatrix thisCluster;  // the MathMatrix that holds all of the data rows that are in cluster k (w/cluster no. as final column)
+            DATAVIEW_MathMatrix thisCluster = null;  // the MathMatrix that holds all of the data rows that are in cluster k (w/cluster no. as final column)
             if (numRows == 0) {  // the cluster has no points assigned to it; write dummy row to avoid errors
-                thisCluster = new DATAVIEW_MathMatrix(1, fullMatrix.getNumOfColumns());
-                double[][] zeroVec = new double[1][PlanetaryClusteringV2.F + 1]; // +1 because we are expecting to have cluster # in final col
-                zeroVec[0][zeroVec[0].length - 1] = (double) k; // set cluster no. column to k
-                thisCluster = new DATAVIEW_MathMatrix(zeroVec);
+                //double[][] zeroVec = new double[1][KMeansClustering.F + 1]; // +1 because we are expecting to have cluster # in final col
+                //zeroVec[0][zeroVec[0].length - 1] = (double) k; // set cluster no. column to k
+//                thisCluster = new DATAVIEW_MathMatrix();
+                outs[2 * (k - 1)].write("");
+                outs[2 * k - 1].write("");
             } else {
                 thisCluster = new DATAVIEW_MathMatrix(numRows, fullMatrix.getNumOfColumns());
                 for (int i = 0; i < numRows; i++) {
                     thisCluster.setRow(i, fullMatrix.getRow(rowsToCopy.get(i))); // copy the rows from the fullMatrix to the partition
                 }
+                // write all points in the entire cluster
+                outs[2 * (k - 1)].write(thisCluster);  // k - 1 since clusters are not 0 indexed
+                // pass on the centroid of the cluster
+                outs[2 * k - 1].write(calculateCentroid(DATAVIEW_MathMatrix.dropColumn(thisCluster.getNumOfColumns() - 1, thisCluster)));
             }
-
-            // write all points in the entire cluster
-            outs[2 * (k - 1)].write(thisCluster);  // k - 1 since clusters are not 0 indexed
-            // pass on the centroid of the cluster
-            outs[2 * k - 1].write(calculateCentroid(DATAVIEW_MathMatrix.dropColumn(thisCluster.getNumOfColumns() - 1, thisCluster)));
         }
     }
 
@@ -77,9 +77,9 @@ public class ClusterPartitioner extends Task {
      */
     // TODO: TEST THIS
     private DATAVIEW_MathVector calculateCentroid(DATAVIEW_MathMatrix clusterData) {
-        DATAVIEW_MathVector centroid = new DATAVIEW_MathVector(PlanetaryClusteringV2.F);
+        DATAVIEW_MathVector centroid = new DATAVIEW_MathVector(KMeansClustering.F);
 
-        for (int col = 0; col < PlanetaryClusteringV2.F; col++) {
+        for (int col = 0; col < KMeansClustering.F; col++) {
             centroid.set(col, clusterData.getColumn(col).sum());  // sum
             centroid.divide(col, clusterData.getNumOfRows());  // divide to average
         }

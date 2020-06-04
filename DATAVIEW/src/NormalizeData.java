@@ -2,7 +2,7 @@ import dataview.models.*;
 
 /**
  * Performs unit normalization of a single column of data.
- * Instances: PlanetaryClusteringV2.F
+ * Instances: KMeansClustering.F
  * Input [0] – DATAVIEW_MathVector: A column vector on which to perform normalization.
  *     From: FeaturePartitioner
  * Output [0] – DATAVIEW_MathVector: A column vector that has been normalized.
