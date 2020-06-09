@@ -7,29 +7,20 @@ public class ClusterPartitioner extends Task {
     public ClusterPartitioner() {
         super("Cluster Partitioner", "Separates data set by assigned cluster number");
 
-        ins = new InputPort[KMeansClustering.P];
-        for (int p = 0; p < ins.length; p++) {
-            ins[p] = new InputPort("Partition " + p, Port.DATAVIEW_MathMatrix, "One partition of the data set");
-        }
+        ins = new InputPort[1];
+        ins[0] = new InputPort("Dataset", Port.DATAVIEW_MathMatrix,"All dataset entries");
 
-        outs = new OutputPort[KMeansClustering.K * 2];
+        outs = new OutputPort[KMeansClustering.K];
         for (int k = 0; k < KMeansClustering.K; k++) {
             // +1 to k because cluster labels start from 1, not 0
-            outs[2 * k] = new OutputPort("Cluster " + (k + 1), Port.DATAVIEW_MathMatrix,"All samples in Cluster no. " + (k + 1));
-            outs[2 * k + 1] = new OutputPort("Centroid " + (k + 1), Port.DATAVIEW_MathVector, "The centroid of cluster no. " + (k + 1));
+            outs[k] = new OutputPort("Cluster " + (k + 1), Port.DATAVIEW_MathMatrix,"All samples in Cluster no. " + (k + 1));
         }
     }
 
     @Override
     public void run() {
         // read in data
-        DATAVIEW_MathMatrix[] incomingPartitions = new DATAVIEW_MathMatrix[ins.length];
-        for (int p = 0; p < incomingPartitions.length; p++) {
-            incomingPartitions[p] = (DATAVIEW_MathMatrix) ins[p].read();
-        }
-
-        // combine all matrices in to one; includes cluster numbers
-        DATAVIEW_MathMatrix fullMatrix = DATAVIEW_MathMatrix.concatenate(incomingPartitions);
+        DATAVIEW_MathMatrix fullMatrix = (DATAVIEW_MathMatrix)ins[0].read();
 
         /* Figure out which rows need to be copied to which cluster partition by keep track of row indices for each cluster number */
         // map the cluster number to the row indices in which they appear in the fullMatrix
@@ -50,39 +41,19 @@ public class ClusterPartitioner extends Task {
         for (int k = 1; k <= KMeansClustering.K; k++) {
             ArrayList<Integer> rowsToCopy = clusterIndices.get(k);  // list of rows that belong to cluster k
             int numRows = rowsToCopy.size();
-            DATAVIEW_MathMatrix thisCluster = null;  // the MathMatrix that holds all of the data rows that are in cluster k (w/cluster no. as final column)
+            DATAVIEW_MathMatrix thisCluster = null;  // the MathMatrix that holds all of the data rows that are in cluster k (w/cluster no. as final column; will be removed when writing)
             if (numRows == 0) {  // the cluster has no points assigned to it; write dummy row to avoid errors
-                //double[][] zeroVec = new double[1][KMeansClustering.F + 1]; // +1 because we are expecting to have cluster # in final col
-                //zeroVec[0][zeroVec[0].length - 1] = (double) k; // set cluster no. column to k
-//                thisCluster = new DATAVIEW_MathMatrix();
-                outs[2 * (k - 1)].write("");
-                outs[2 * k - 1].write("");
+                // k - 1 because k starts at 1 here, rather than 0
+                outs[k - 1].write("");
             } else {
                 thisCluster = new DATAVIEW_MathMatrix(numRows, fullMatrix.getNumOfColumns());
                 for (int i = 0; i < numRows; i++) {
                     thisCluster.setRow(i, fullMatrix.getRow(rowsToCopy.get(i))); // copy the rows from the fullMatrix to the partition
                 }
-                // write all points in the entire cluster
-                outs[2 * (k - 1)].write(thisCluster);  // k - 1 since clusters are not 0 indexed
-                // pass on the centroid of the cluster
-                outs[2 * k - 1].write(calculateCentroid(DATAVIEW_MathMatrix.dropColumn(thisCluster.getNumOfColumns() - 1, thisCluster)));
+                // write all points in the entire cluster WITH the cluster assignment column
+                // k - 1 because k starts at 1 here, rather than 0
+                outs[k - 1].write(thisCluster);
             }
         }
-    }
-
-    /**
-     *
-     * @param clusterData A DATAVIEW_MathMatrix whose points ALL belong to a single cluster; final column in cluster number
-     * @return
-     */
-    // TODO: TEST THIS
-    private DATAVIEW_MathVector calculateCentroid(DATAVIEW_MathMatrix clusterData) {
-        DATAVIEW_MathVector centroid = new DATAVIEW_MathVector(KMeansClustering.F);
-
-        for (int col = 0; col < KMeansClustering.F; col++) {
-            centroid.set(col, clusterData.getColumn(col).sum());  // sum
-            centroid.divide(col, clusterData.getNumOfRows());  // divide to average
-        }
-        return centroid;
     }
 }

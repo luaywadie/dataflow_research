@@ -32,7 +32,6 @@ public class ClusteringResultWriter extends Task {
 			DATAVIEW_MathMatrix thisCluster = (DATAVIEW_MathMatrix) ins[i].read();
 			int thisNumRows = thisCluster.getNumOfRows();
 			for (int row = 0 ; row < thisNumRows; row++) {
-				// doing on multiple lines because it's too long for all in one line
 				// final column i scluster no. as a double, so just trim the ".0" to show as int
 				String rowString = thisCluster.getRow(row).toString();
 				String trimmedRowString = rowString.substring(0, rowString.length() - 2);

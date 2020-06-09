@@ -6,7 +6,7 @@ public class OneClusterSSE extends Task {
 
         ins = new InputPort[2];
         ins[0] = new InputPort("Partition", Port.DATAVIEW_MathMatrix, "All data points in the cluster.");
-        ins[1] = new InputPort("Centroid", Port.DATAVIEW_MathVector, "The centroid for the cluster");
+        ins[1] = new InputPort("Centroid", Port.DATAVIEW_MathVector, "The centroid for the cluster.");
 
         outs = new OutputPort[2];
         outs[0] = new OutputPort("SSE", Port.DATAVIEW_double, "The SSE of the cluster.");
@@ -16,15 +16,16 @@ public class OneClusterSSE extends Task {
     @Override
     public void run() {
         DATAVIEW_MathMatrix matrix = (DATAVIEW_MathMatrix) ins[0].read();
+        // drop the cluster assignment column
+        matrix = DATAVIEW_MathMatrix.dropColumn(matrix.getNumOfColumns() - 1, matrix);
         double sse = 0.0;
 
         if (matrix.getNumOfRows() != 0) {  // there could be 0 points assigned to this cluster
             // drop the final column from the data, which is the column that gives the column number
-            DATAVIEW_MathMatrix data = DATAVIEW_MathMatrix.dropColumn(matrix.getNumOfColumns() - 1, matrix);
             DATAVIEW_MathVector centroid = (DATAVIEW_MathVector) ins[1].read();
 
-            for (int row = 0; row < data.getNumOfRows(); row++) {
-                sse += squaredEuclideanDist(data.getRow(row), centroid);
+            for (int row = 0; row < matrix.getNumOfRows(); row++) {
+                sse += squaredEuclideanDist(matrix.getRow(row), centroid);
             }
         }
         outs[0].write(sse);

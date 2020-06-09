@@ -29,20 +29,33 @@ public class KMeansClustering extends Workflow {
 
     public void design() {
         // -----create tasks-----//
+        // tasks that set us up for iteration
         Task featurePartitioner = addTask("FeaturePartitioner");
         Task[] normalizeData = addTasks("NormalizeData", F);
+        Task columnsToMatrix = addTask("ColumnsToMatrix");
+        Task initialRowPartitioner = addTask("RowPartitioner");
         Task initCentroids = addTask("InitCentroids");
         /* The set of AssignCluster tasks used directly after InitCentroids.
          * Just makes indexing of tasks for edges a lot easier. */
         Task[] initialAssignClusters = addTasks("AssignClusters", P);
-        /* Tasks below this line have yet to be implemented */
-        Task[] updateCentroids = addTasks("UpdateCentroids", N);
-        /* The set of AssignCluster tasks used in the iterations. */
+
+        // tasks that are part of the iteration
+        Task[] iterPartitionMerger = addTasks("PartitionMerger", N);
+        Task[] iterClusterPartitioner = addTasks("ClusterPartitioner", N);
+        Task[] iterCalculateCentroid = addTasks("CalculateCentroid", N * K);
+        Task[] iterRowPartitioner = addTasks("RowPartitioner", N);
+        Task[] iterMakeCentroidMatrix = addTasks("MakeCentroidMatrix", N);
         Task[] iterAssignClusters = addTasks("AssignClusters", N * P);
+
+        // tasks that follow iteration
+        Task partitionMerger = addTask("PartitionMerger");
+        /* The set of AssignCluster tasks used in the iterations. */
         Task clusterPartitioner = addTask("ClusterPartitioner");
+        Task[] calculateCentroid = addTasks("CalculateCentroid", K);
         Task[] oneClusterSSE = addTasks("OneClusterSSE", K);
         Task allClusterSSE = addTask("AllClusterSSE");
         Task clusteringResultWriter = addTask("ClusteringResultWriter");
+        Task extraOutputConsumer = addTask("ExtraOutputConsumer");
 
         // ------ IO edges ------ //
         // input
@@ -53,51 +66,89 @@ public class KMeansClustering extends Workflow {
         addEdge(allClusterSSE, 1);
 
         // ------ Inter-Task Edges ------ //
+        // first set of non-iterative tasks (come BEFORE iteration)
         // from FeaturePartitioner to each instance of NormalizeData
-        for (int f = 0;  f < F; f++) addEdge(featurePartitioner, f, normalizeData[f], 0);
-        // from NormalizeData to InitCentroids
-        for (int f = 0; f < F; f++) addEdge(normalizeData[f], 0, initCentroids, f);
-//        // from InitCentroids to the initial round of AssignClusters
+        for (int f = 0;  f < F; f++) {
+            addEdge(featurePartitioner, f, normalizeData[f], 0);  // a non-normalized column vector
+        }
+        // from NormalizeData to ColumnsToMatrix
+        for (int f = 0; f < F; f++) {
+            addEdge(normalizeData[f], 0, columnsToMatrix, f); // a unit-norm column vector
+        }
+        // from ColumnsToMatrix to RowPartitioner and InitCentroids
+        addEdge(columnsToMatrix, 0, initialRowPartitioner, 0); // full data set matrix
+        addEdge(columnsToMatrix, 0, initCentroids, 0);  // full data set matrix
+        // from RowPartitioner and InitCentroids to AssignClusters
         for (int p = 0; p < P; p++) {
-            addEdge(initCentroids, p, initialAssignClusters[p], 0);  // partition matrix
-            addEdge(initCentroids, P, initialAssignClusters[p], 1);  // centroid matrix
+            addEdge(initialRowPartitioner, p, initialAssignClusters[p], 0);  // a partition of the full data set
+            addEdge(initCentroids, 0, initialAssignClusters[p], 1);  // centroid matrix
+        }  //
+
+        // edges from the first set of non-iterative tasks to the first iteration of iterable tasks
+        // from AssignClusters to the 1st instance of PartitonMerger
+        for (int p = 0; p < P; p++) {
+            addEdge(initialAssignClusters[p], 0, iterPartitionMerger[0], p);  // partitions of data set with assigned cluster
         }
 
-        // from the initial AssignClusters to the 0th UpdateCentroids
-        for (int p = 0; p < P; p++) addEdge(initialAssignClusters[p], 0, updateCentroids[0], p);
-
-        // edges between UpdateCentroids and AssignClusters for all iterations (except initial)
+        // edges within iteration
         for (int n = 0; n < N; n++) {
-            // between UpdateCentroids and AssignClusters for each iteration
-            for (int p = 0; p < P; p++) {
-                // [0-> (P-1)]: specific individual partition
-                addEdge(updateCentroids[n], p, iterAssignClusters[n * P + p], 0);  // partition set
-                // [P]: index of cetroid list output port (constant)
-                addEdge(updateCentroids[n], P, iterAssignClusters[n * P + p], 1);  // centroid list
+            // from PartitionMerger to ClusterPartitioner and RowPartitioner
+            // this edge carries the full data set WITHOUT the cluster assignment column
+            addEdge(iterPartitionMerger[n], 0, iterRowPartitioner[n], 0);
+            // this edge carries the full data set WITH the cluster assignment column
+            addEdge(iterPartitionMerger[n], 1, iterClusterPartitioner[n], 0);
+
+            // from ClusterPartitioner to CalculateCentroid
+            for (int k = 0; k < K; k++) {
+                addEdge(iterClusterPartitioner[n], k, iterCalculateCentroid[n * K + k], 0);  // a matrix containing samples of a single cluster
             }
-        }
-        // from AssignClusters back to UpdateCentroids
-        for (int n = 0; n < N - 1; n++) {
+
+            // from CalculateCentroid to MakeCentroidMatrix
+            for (int k = 0; k < K; k++) {
+                addEdge(iterCalculateCentroid[n * K + k], 0, iterMakeCentroidMatrix[n], k);  // the centroid of a point
+            }
+
+            // from RowPartitioner and MakeCentroidMatrix to AssignClusters
             for (int p = 0; p < P; p++) {
-                addEdge(iterAssignClusters[n * P + p], 0, updateCentroids[n + 1], p);
+                addEdge(iterRowPartitioner[n], p, iterAssignClusters[n * P + p], 0); // a partition of the entire data set
+                addEdge(iterMakeCentroidMatrix[n], 0, iterAssignClusters[n * P + p], 1); // matrix containing all centroids
+            }
+
+            // from AssignClusters back to PartitionMerger (which is the beginining of the next iteration
+            if (n != N - 1) {  // final iteration goes to non-iterative tasks, otherwise connect to next iteration
+                for (int p = 0; p < P; p++) {
+                   addEdge(iterAssignClusters[n * P + p], 0, iterPartitionMerger[n + 1], p); // partition matrix with cluster assignments
+                }
             }
         }
 
-        // from final iteration of AssignClusters to ClusterPartitioner
-        // P * (N - 1): The first instance of AssignClusters in the final iteration of AssignClusters
-        for (int p = P * (N - 1); p < P * N; p++)
-            addEdge(iterAssignClusters[p], 0, clusterPartitioner, p % P);
-        // from ClusterPartitioner to each instance of OneClusterSSE plus ClusteringResultWriter
-        for (int k = 0; k < K; k++) {
-            addEdge(clusterPartitioner, 2 * k, clusteringResultWriter, k);  // data points
-            addEdge(clusterPartitioner, 2 * k, oneClusterSSE[k], 0); // data points
-            addEdge(clusterPartitioner, 2 * k + 1, oneClusterSSE[k], 1);  // centroids
+        // edges from the final instance of iterative tasks to the second set of non-iteartive tasks
+        // from AssignClusters to PartitionMerger
+        for (int p = 0; p < P; p++) {
+            addEdge(iterAssignClusters[(N - 1) * P + p], 0, partitionMerger, p);  // partition matrix with cluster assignments
         }
 
-        // OneClusterSSE to AllClusterSSE
+        // edges following the iterative portion of the workflow
+        // edge from PartitonMerger to ClusterPartitioner
+        addEdge(partitionMerger, 0, extraOutputConsumer, 0); // don't need this output outside of iteration
+        addEdge(partitionMerger, 1, clusterPartitioner, 0); // matrix of ALL data points
+
+        // edges from ClusterPartitioner to ClusteringResultWriter, CalculateCentroid, and OneClusterSSE
         for (int k = 0; k < K; k++) {
-            addEdge(oneClusterSSE[k], 0, allClusterSSE, 2 * k);  // SSE value
-            addEdge(oneClusterSSE[k], 1, allClusterSSE, 2 * k + 1);  // cluster cardinality
+            addEdge(clusterPartitioner, k, clusteringResultWriter, k);
+            addEdge(clusterPartitioner, k, oneClusterSSE[k], 0);
+            addEdge(clusterPartitioner, k, calculateCentroid[k], 0);
+        }
+
+        // edges from CalculateCentroid to OneClusterSSE
+        for (int k = 0; k < K; k++) {
+            addEdge(calculateCentroid[k], 0, oneClusterSSE[k], 1);
+        }
+
+        // from OneClusterSSE to AllClusterSSE
+        for (int k = 0; k < K; k++) {
+            addEdge(oneClusterSSE[k], 0, allClusterSSE, 2 * k);  // SSE of cluster
+            addEdge(oneClusterSSE[k], 1, allClusterSSE, 2 * k + 1);  // cardinality of cluster
         }
     }
 }
