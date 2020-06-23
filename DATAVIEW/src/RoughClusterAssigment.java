@@ -56,21 +56,22 @@ public class RoughClusterAssigment extends Task {
                 }
             }
 
-            // check to see if the data point is in upper bound of any clusters; if so, add the data point the upper bound
-            ArrayList<DATAVIEW_MathVector> membershipSet = new ArrayList<>();  // corresponds to set T in the paper
+            // check to see if the data point is in upper bound of any clusters; if is, add the cluster number to the set
+            ArrayList<Integer> T = new ArrayList<>();  // corresponds to set T in the paper
             for (int c = 0; c < centroids.getNumOfRows(); c++) {
                 if (c != minCluster) {
                     if (minDistance - clustDists[c] <= RoughKMeansClustering.THRESHOLD) {
-                        membershipSet.get(c).add(row.insert(0, rowId));
+                        T.add(c);
                     }
                 }
             }
 
-            if (!membershipSet.isEmpty()) {
-                // the the row is in the upper bounds of all clusters in the membershipSet
-                for (int c = 0; c < membershipSet.size(); c++) {
-                    // add the data point to the upper bound set for cluster c, with ID label attached
-                    upperBounds.get(c).add(row.insert(0, rowId));
+            if (!T.isEmpty()) {
+                // the the row is in the upper bounds of all clusters in the T
+                for (int j = 0; j < T.size(); j++) {
+                    // add the data point to the upper bound set for cluster j, with ID label attached
+                    int clusterNumber = T.get(j);
+                    upperBounds.get(clusterNumber).add(row.insert(0, rowId));
                 }
             } else {
                 // add the point with ID label attached to ONLY the LOWER bound set
@@ -114,7 +115,7 @@ public class RoughClusterAssigment extends Task {
         }
 
         outs[0].write(lowerBoundsJSON);
-        outs[1].write(lowerBoundsJSON);
+        outs[1].write(upperBoundsJSON);
     }
 
     private double euclideanDistance(DATAVIEW_MathVector x, DATAVIEW_MathVector y) {
